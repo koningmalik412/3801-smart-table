@@ -33,7 +33,7 @@ const Homepage = () => {
               Dashboard
             </div>
           </Link>
-          <div className="h-[100px] w-full p-4 bg-gray rounded-[30px] border-[3px] border-brown">
+          <div className="h-[100px] w-full mt-6 p-4 bg-gray rounded-[30px] border-[3px] border-brown">
             Navigation Bar
           </div>
         </div>
