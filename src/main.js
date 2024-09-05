@@ -1,15 +1,14 @@
 
-
 const { app, BrowserWindow } = require("electron");
 
 function createMainWindow() {
     const mainWindow = new BrowserWindow({
         title: 'Smart Table',
-        width: 1200,
-        height: 800,
+        width: 1920,
+        height: 1080,
     });
 
-    mainWindow.loadFile("index.html")
+    mainWindow.loadURL("http://localhost:3000")
 };
 
 app.whenReady().then(createMainWindow)
