@@ -2,7 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import "./App.css";
 import Homepage from "./pages/Homepage";
 import Calendar from "./pages/Calendar";
-import Dashboard from "./pages/Dashboard";
+import Community from "./pages/Community";
 import Games from "./pages/Games";
 import Profiles from "./pages/Profiles";
 
@@ -13,7 +13,7 @@ function App() {
       <Route path="/calendar" element={<Calendar />} />
       <Route path="/profiles" element={<Profiles />} />
       <Route path="/games" element={<Games />} />
-      <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/community" element={<Community />} />
     </Routes>
   );
 }
