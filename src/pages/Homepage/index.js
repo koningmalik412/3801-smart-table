@@ -28,7 +28,7 @@ const Homepage = () => {
           </Link>
         </div>
         <div className="w-2/6 p-4">
-          <Link to="/dashboard">
+          <Link to="/community">
             <div className="h-[500px] w-full p-4 bg-yellow rounded-[30px] border-[3px] border-brown">
               Dashboard
             </div>
