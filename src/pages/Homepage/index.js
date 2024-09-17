@@ -36,7 +36,7 @@ const Homepage = () => {
           </Link>
         </div>
         <div className="w-2/6 p-4">
-          <Link to="/dashboard">
+          <Link to="/community">
             <div className="h-[495px] w-full p-10 bg-yellow rounded-[30px] border-[3px] border-brown">
               <h3 className="text-3xl font-bold text-brown ml-7 font-pathway">Dashboard</h3>
               <h4 className="text-lg text-[#7B7E9D] font-bold mb-2 italic ml-7 font-pathway">Community dashboard</h4>

@@ -1,6 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import "./App.css";
 import Homepage from "./pages/Homepage";
+import Calendar from "./pages/Calendar";
 import CalendarPage from "./pages/Calendar";
 import Dashboard from "./pages/Dashboard";
 import Games from "./pages/Games";
@@ -27,7 +28,7 @@ function App() {
           <Route path="/calendar" element={<CalendarPage />} />
           <Route path="/profiles" element={<Profiles />} />
           <Route path="/games" element={<Games />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/community" element={<Community />} />
           <Route path="/settings" element={<Settings />} />
         </Routes>
       </div>
