@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import "./App.css";
 import Homepage from "./pages/Homepage";
 import CalendarPage from "./pages/Calendar";
@@ -7,16 +7,24 @@ import Profiles from "./pages/Profiles";
 import Settings from "./pages/Settings";
 import Header from "./pages/Header";
 import Footer from "./pages/Footer";
+import {
+  House,
+  Note,
+  CalendarDots,
+  Users,
+  DotsThreeOutline,
+} from "@phosphor-icons/react";
 import Community from "./pages/Community";
 
 function App() {
+  const location = useLocation();
+
   const navLinks = [
-    { path: "/", text: "Home" },
-    { path: "/dashboard", text: "Dashboard" },
-    { path: "/calendar", text: "Calendar" },
-    { path: "/games", text: "Games" },
-    { path: "/profiles", text: "Profiles" },
-    { path: "/settings", text: "Settings" },
+    { path: "/", icon: <House size={32} weight="fill" /> },
+    { path: "/community", icon: <Note size={32} weight="fill" /> },
+    { path: "/calendar", icon: <CalendarDots size={32} weight="fill" /> },
+    { path: "/profiles", icon: <Users size={32} weight="fill" /> },
+    { path: "/settings", icon: <DotsThreeOutline size={32} weight="fill" /> },
   ];
 
   return (
@@ -31,9 +39,11 @@ function App() {
           <Route path="/settings" element={<Settings />} />
         </Routes>
       </div>
+      <div className="flex justify-end">
+        <Header navLinks={navLinks} />
+      </div>
 
-      <Header navLinks={navLinks} />
-      <Footer />
+      {location.pathname === "/" && <Footer />}
     </div>
   );
 }
