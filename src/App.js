@@ -28,8 +28,8 @@ function App() {
   ];
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <div className="flex-grow">
+    <div className="flex flex-col min-h-screen ">
+      <div className="flex-grow ">
         <Routes>
           <Route path="/" element={<Homepage />} />
           <Route path="/calendar" element={<CalendarPage />} />
@@ -39,7 +39,7 @@ function App() {
           <Route path="/settings" element={<Settings />} />
         </Routes>
       </div>
-      <div className="flex justify-end">
+      <div className="flex absolute bottom-0 right-0 pb-10">
         <Header navLinks={navLinks} />
       </div>
 
