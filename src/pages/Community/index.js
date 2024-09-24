@@ -30,21 +30,21 @@ const Community = () => {
       <div className="absolute w-full px-12 z-10">
         {/* Title */}
         <div className="block mt-12 mb-2">
-          <h5 className="text-6xl text-brown">COMMUNITY BOARD</h5>
+          <h5 className="text-9xl text-brown">COMMUNITY BOARD</h5>
         </div>
 
         {/* Event Button */}
         <div className="absolute top-14 right-20">
           <button
             onClick={handleOpenPopup}
-            className="bg-pink text-brown text-2xl py-2 px-8 rounded-3xl"
+            className="bg-pink text-brown text-5xl py-2 px-8 rounded-3xl"
           >
             CREATE AN EVENT
           </button>
         </div>
 
         {/* Board */}
-        <div className="bg-base h-[600px] w-full rounded-[30px] border-[3px] border-brown p-4 overflow-auto">
+        <div className="bg-base h-[1100px] w-full rounded-[30px] border-[3px] border-brown p-4 overflow-auto">
           <div className="grid grid-cols-3 gap-4">
             {events.map((event, index) => (
               <div
@@ -68,14 +68,14 @@ const Community = () => {
 
         {/* Back Button */}
         <div className="mt-12 ml-2">
-          <Link to="/" className="bg-pink text-2xl py-2 px-8 rounded-3xl">
+          <Link to="/" className="bg-pink text-5xl py-2 px-8 rounded-3xl">
             BACK
           </Link>
         </div>
       </div>
 
       {/* Background div */}
-      <div className="absolute bottom-0 left-0 w-full h-[650px] bg-brown z-0"></div>
+      <div className="absolute bottom-0 left-0 w-full h-[1050px] bg-brown z-0"></div>
       <AddEvent isOpen={isPopupOpen} onClose={handleClosePopup} onAddEvent={handleAddEvent} />
     </>
   );
