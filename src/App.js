@@ -13,6 +13,7 @@ import {
   CalendarDots,
   Users,
   DotsThreeOutline,
+  Checkerboard,
 } from "@phosphor-icons/react";
 import Community from "./pages/Community";
 
@@ -20,11 +21,12 @@ function App() {
   const location = useLocation();
 
   const navLinks = [
-    { path: "/", icon: <House size={32} weight="fill" /> },
-    { path: "/community", icon: <Note size={32} weight="fill" /> },
-    { path: "/calendar", icon: <CalendarDots size={32} weight="fill" /> },
-    { path: "/profiles", icon: <Users size={32} weight="fill" /> },
-    { path: "/settings", icon: <DotsThreeOutline size={32} weight="fill" /> },
+    { path: "/", icon: <House size={60} weight="fill" /> },
+    { path: "/community", icon: <Note size={60} weight="fill" /> },
+    { path: "/calendar", icon: <CalendarDots size={60} weight="fill" /> },
+    { path: "/profiles", icon: <Users size={60} weight="fill" /> },
+    { path: "/games", icon: <Checkerboard size={60} weight="fill" /> },
+    { path: "/settings", icon: <DotsThreeOutline size={60} weight="fill" /> },
   ];
 
   return (
@@ -43,7 +45,7 @@ function App() {
         <Header navLinks={navLinks} />
       </div>
 
-      {location.pathname === "/" && <Footer />}
+      {/* {location.pathname === "/" && <Footer />} */}
     </div>
   );
 }

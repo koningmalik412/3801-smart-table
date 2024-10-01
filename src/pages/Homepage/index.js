@@ -1,5 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import {
+  Note,
+  CalendarDots,
+  Users,
+  DotsThreeOutline,
+  Checkerboard,
+} from "@phosphor-icons/react";
 
 const Homepage = () => {
   return (
@@ -11,64 +18,48 @@ const Homepage = () => {
         <div className="w-4/6 p-4">
           <div className="flex h-[500px] gap-4">
             <Link to="/calendar" className="w-4/6">
-              <div className="h-full p-10 w-full rounded-[30px] shadow-[0px_4px_15px_rgba(0,0,0,0.5)] bg-base">
-                <h3 className="text-6xl text-brown font-bold ml-7 font-pathway">
+              <div className="h-full p-10 w-full rounded-[30px] shadow-[0px_4px_15px_rgba(0,0,0,0.5)] bg-lightblue flex flex-col justify-center items-center">
+                <h3 className="text-9xl text-brown font-bold ml-7 font-pathway">
                   Calendar
                 </h3>
-                <h4 className="text-4xl text-[#7B7E9D] font-bold mb-2 ml-7 italic font-pathway">
-                  Scheduling and Planning
-                </h4>
-                <p className="text-xl mt-5 mb-2 pt-4 pr-6 ml-7 text-brown font-montserrat">
-                  Create and manage schedules, and view the latest events on a
-                  timeline. Your family can come together, sit down, and discuss
-                  schedules collaboratively.
-                </p>
+                <CalendarDots size={500} weight="fill" style={{ color: '#60534F' }}/>
               </div>
             </Link>
             <Link to="/profiles" className="w-2/6">
-              <div className="h-full p-9 w-full rounded-[30px] shadow-[0px_4px_15px_rgba(0,0,0,0.5)] bg-base">
-                <h3 className="text-3xl text-brown font-bold ml-3 font-pathway">
+              <div className="h-full p-9 w-full rounded-[30px] shadow-[0px_4px_15px_rgba(0,0,0,0.5)] bg-base flex flex-col justify-center items-center">
+                <h3 className="text-9xl text-brown font-bold ml-3 font-pathway">
                   Profiles
                 </h3>
-                <h4 className="text-lg text-[#7B7E9D] font-bold mb-2 ml-3 italic font-pathway">
-                  Family profiles
-                </h4>
-                <p className="text-sm mt-7 mb-2 ml-3 mr-2 text-brown font-montserrat">
-                  Manage family members and their details, including adding,
-                  editing, and deleting.
-                </p>
+                <Users size={300} weight="fill" style={{ color: '#60534F' }}/>
               </div>
             </Link>
           </div>
-          <Link to="/games">
-            <div className="h-[620px] w-full mt-6 p-10 rounded-[30px] shadow-[0px_4px_15px_rgba(0,0,0,0.5)] bg-pink">
-              <h3 className="text-3xl font-bold text-brown ml-7 font-pathway">
-                Games
-              </h3>
-              <h4 className="text-lg text-[#7B7E9D] font-bold mb-2 italic ml-7 font-pathway">
-                Board games
-              </h4>
-              <p className="text-sm mt-5 mb-2 ml-7 text-brown font-montserrat">
-                Use the table as a space to play board games together.
-              </p>
-            </div>
-          </Link>
+          <div className="flex mt-6 gap-4">
+            <Link to="/games" className="w-4/6">
+              <div className="h-[500px] w-full p-10 rounded-[30px] shadow-[0px_4px_15px_rgba(0,0,0,0.5)] bg-pink bg-base flex flex-col justify-center items-center">
+                <h3 className="text-9xl font-bold text-brown ml-7 font-pathway">
+                  Games
+                </h3>
+                <Checkerboard size={500} weight="fill" style={{ color: '#60534F' }}/>
+              </div>
+            </Link>
+            <Link to="/settings" className="w-2/6">
+              <div className="h-[500px] w-full p-10 rounded-[30px] shadow-[0px_4px_15px_rgba(0,0,0,0.5)] bg-base bg-base flex flex-col justify-center items-center">
+                <h3 className="text-9xl font-bold text-brown ml-7 font-pathway">
+                  Settings
+                </h3>
+                <DotsThreeOutline size={500} weight="fill" style={{ color: '#60534F' }}/>
+              </div>
+            </Link>
+          </div>
         </div>
         <div className="w-2/6 p-4">
           <Link to="/community">
-            <div className="h-[1000px] w-full p-10 rounded-[30px] shadow-[0px_4px_15px_rgba(0,0,0,0.5)] bg-yellow">
-              <h3 className="text-3xl font-bold text-brown ml-7 font-pathway">
-                Community Board
+            <div className="h-[1000px] w-full p-10 rounded-[30px] shadow-[0px_4px_15px_rgba(0,0,0,0.5)] bg-yellow bg-base flex flex-col justify-center items-center">
+              <h3 className="text-9xl font-bold text-brown ml-7 font-pathway">
+                Event Board
               </h3>
-              <h4 className="text-lg text-[#7B7E9D] font-bold mb-2 italic ml-7 font-pathway">
-                Event dashboard
-              </h4>
-              <p className="text-sm mb-2 mt-10 pt-4 ml-7 mr-7 text-brown font-montserrat">
-                All important events and dates are posted in the form of
-                post-it-notes, allowing for a quick view of family schedules.
-                The events and dates created can also be added and displayed on
-                the standby screen.
-              </p>
+              <Note size={500} weight="fill" style={{ color: '#60534F' }}/>
             </div>
           </Link>
         </div>

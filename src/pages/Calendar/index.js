@@ -20,44 +20,49 @@ const CalendarPage = () => {
 
   return (
     <div className="overflow-hidden w-full h-screen relative">
-      <div className="bg-brown w-[700px] -top-[215px] -left-[100px] h-[1400px] rounded-r-full absolute"></div>
-      <div className="px-[50px] pt-[100px] w-full h-screen">
-        <div className="w-full h-[650px] relative mb-[50px] flex flex-row">
-          <div className="w-[300px] bg-base mr-[50px] my-auto">
-            <Calendar onChange={onChange} value={date} />
+      <div className="bg-brown w-[1500px] -top-[300px] -left-[100px] h-[1800px] rounded-r-full absolute"></div>
+      <div className="px-[100px] pt-[150px] w-full h-screen">
+        <div className="w-full h-[1000px] relative mb-[50px] flex flex-row">
+          <div className="w-[700px] bg-base mr-[60px] my-auto rounded-xl">
+            <Calendar 
+              onChange={onChange} 
+              value={date} 
+              className="text-4xl" 
+              style={{ width: '100%', borderRadius: '3rem'}} 
+            />
           </div>
           <div className="h-full flex flex-col border-4 border-darkbrown rounded-3xl grow bg-base bg-opacity-70 overflow-hidden">
-            <div className="w-full h-[125px] border-b border-b-brown flex flex-row items-center justify-between px-8">
-              <h2 className="text-3xl font-bold ms-10 flex">
-                <CaretLeft size={32} className="me-3" /> SEPTEMBER 2024{" "}
-                <CaretRight size={32} className="ms-3" />
+            <div className="w-full h-[175px] border-b border-b-brown flex flex-row items-center justify-between px-8">
+              <h2 className="text-6xl font-bold ms-10 flex">
+                <CaretLeft size={50} className="me-3" /> SEPTEMBER 2024{" "}
+                <CaretRight size={50} className="ms-3" />
               </h2>
               <div className="flex flex-row gap-16">
                 <div className="flex">
-                  <div className="bg-gray w-[300px] h-[50px] rounded-full flex flex-row">
-                    <div className="bg-blue w-[100px] h-[50px] rounded-full flex justify-center">
-                      <p className="text-lg my-auto">Month</p>
+                  <div className="bg-gray w-[500px] h-[70px] rounded-full flex flex-row">
+                    <div className="bg-blue w-[150px] h-[70px] rounded-full flex justify-center">
+                      <p className="text-2xl my-auto">Month</p>
                     </div>
-                    <div className=" w-[100px] h-[50px] rounded-full flex justify-center">
-                      <p className="text-lg my-auto">Week</p>
+                    <div className="w-[150px] h-[70px] rounded-full flex justify-center">
+                      <p className="text-2xl my-auto">Week</p>
                     </div>
-                    <div className=" w-[100px] h-[50px] rounded-full flex justify-center">
-                      <p className="text-lg my-auto">Day</p>
+                    <div className="w-[150px] h-[70px] rounded-full flex justify-center">
+                      <p className="text-2xl my-auto">Day</p>
                     </div>
                   </div>
                 </div>
                 <Link to="/" className="relative -top-1">
-                  <div className="bg-pink rounded-full w-[130px] h-[50px] flex justify-center shadow-3xl absolute z-10">
-                    <h3 className="text-2xl my-auto">ADD</h3>
+                  <div className="bg-pink rounded-full w-[250px] h-[70px] flex justify-center shadow-3xl absolute z-10">
+                    <h6 className="text-3xl my-auto font-semibold text-brown">Add an event</h6>
                   </div>
-                  <div className="bg-black rounded-full w-[130px] h-[50px] flex justify-center shadow-3xl relative z-0 top-1 left-1"></div>
+                  <div className="bg-black rounded-full w-[250px] h-[70px] flex justify-center shadow-3xl relative z-0 top-1 left-1"></div>
                 </Link>
               </div>
             </div>
             <div className="flex-1">
               <div className="grid grid-cols-7 grid-rows-5 w-full h-full">
                 {septDays.map((i) => (
-                  <div className="border-b border-r border-brown py-2 px-3">
+                  <div className="border-b border-r border-brown py-4 px-6 text-2xl" key={i}>
                     {i}
                   </div>
                 ))}
@@ -65,37 +70,38 @@ const CalendarPage = () => {
             </div>
           </div>
         </div>
-        <div className="w-full h-[70px] relative flex items-center justify-between">
-          <Link to="/" className="relative -top-1">
-            <div className="bg-pink rounded-full w-[170px] h-[50px] flex justify-center shadow-3xl absolute z-10">
-              <h3 className="text-2xl my-auto">BACK</h3>
-            </div>
-            <div className="bg-black rounded-full w-[170px] h-[50px] flex justify-center shadow-3xl relative z-0 top-1 left-1"></div>
-          </Link>
-          <div className="bg-gray w-[500px] h-[85px] rounded-full flex flex-row">
-            <div className="bg-pink w-[85px] rounded-full border-4 border-darkbrown">
-              <img
-                src={malikdp}
-                className="object-fill rounded-full"
-                alt="Malik DP"
-              />
-            </div>
-            <div className="bg-pink w-[85px] rounded-full ">
-              <img
-                src={malikdp}
-                className="object-fill rounded-full"
-                alt="Malik DP"
-              />
-            </div>
-            <div className="bg-pink w-[85px] rounded-full ">
-              <img
-                src={malikdp}
-                className="object-fill rounded-full"
-                alt="Malik DP"
-              />
-            </div>
+
+        <div className="absolute top-[30px] right-[100px] rounded-full bg-gray p-1 flex items-center gap-1 shadow-xl">
+          <div className="bg-pink w-[100px] h-[100px] rounded-full border-4 border-darkbrown flex justify-center items-center">
+            <img
+              src={malikdp}
+              className="object-fill rounded-full w-full h-full"
+              alt="Malik DP"
+            />
           </div>
-          <div className="bg-gray w-[350px] h-full rounded-full"></div>
+          <div className="bg-pink w-[70px] h-[70px] rounded-full border-4 border-darkbrown flex justify-center items-center">
+            <img
+              src={malikdp}
+              className="object-fill rounded-full w-full h-full"
+              alt="Malik DP"
+            />
+          </div>
+          <div className="bg-pink w-[70px] h-[70px] rounded-full border-4 border-darkbrown flex justify-center items-center">
+            <img
+              src={malikdp}
+              className="object-fill rounded-full w-full h-full"
+              alt="Malik DP"
+            />
+          </div>
+        </div>
+
+        <div className="absolute left-[100px] bottom-[30px]">
+          <Link to="/" className="relative -top-1">
+            <div className="bg-pink rounded-full w-[230px] h-[70px] flex justify-center shadow-3xl absolute z-10">
+              <h6 className="text-3xl my-auto font-semibold text-brown">BACK</h6>
+            </div>
+            <div className="bg-black rounded-full w-[230px] h-[70px] flex justify-center shadow-3xl relative z-0 top-1 left-1"></div>
+          </Link>
         </div>
       </div>
     </div>
