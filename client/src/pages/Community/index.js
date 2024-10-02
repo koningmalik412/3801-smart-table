@@ -18,34 +18,6 @@ const Community = () => {
     return size;
   };
 
-  // const calculatePosition = (boxSize) => {
-  //   const boardWidth = 3000; 
-  //   const boardHeight = 1100; 
-  //   let position;
-
-  //   let isOverlapping;
-  //   do {
-  //     position = {
-  //       x: Math.random() * (boardWidth - boxSize),
-  //       y: Math.random() * (boardHeight - boxSize),
-  //     };
-
-  //     // Check for overlap with existing events
-  //     isOverlapping = events.some((event) => {
-  //       const eventX = event.position?.x || 0;
-  //       const eventY = event.position?.y || 0;
-  //       return (
-  //         position.x < eventX + boxSize &&
-  //         position.x + boxSize > eventX &&
-  //         position.y < eventY + boxSize &&
-  //         position.y + boxSize > eventY
-  //       );
-  //     });
-  //   } while (isOverlapping);
-
-  //   return position;
-  // };
-
   const calculatePosition = (boxSize) => {
     const boardWidth = 3000; 
     const boardHeight = 1100; 
