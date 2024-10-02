@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState} from "react";
 import { Link } from "react-router-dom";
 import AddEvent from "./addEvent.js";
 
@@ -10,47 +10,118 @@ const Community = () => {
   const handleClosePopup = () => setIsPopupOpen(false);
 
   const calculateBoxSize = () => {
-    const minSize = 400; // Minimum size of the post-it box
-    const maxSize = 800; // Maximum size of the post-it box
+    const minSize = 100; // Minimum size of the post-it box
+    const maxSize = 600; // Maximum size of the post-it box
     const numEvents = events.length;
     const maxEvents = 9; // Maximum number of events to fit nicely
-    const size = Math.max(minSize, Math.min(maxSize, (600 / Math.ceil(numEvents / 3)) * 0.9));
+    const size = Math.max(minSize, Math.min(maxSize, (3000 / Math.ceil(numEvents / 3)) * 0.9));
     return size;
   };
-  
+
+  // const calculatePosition = (boxSize) => {
+  //   const boardWidth = 3000; 
+  //   const boardHeight = 1100; 
+  //   let position;
+
+  //   let isOverlapping;
+  //   do {
+  //     position = {
+  //       x: Math.random() * (boardWidth - boxSize),
+  //       y: Math.random() * (boardHeight - boxSize),
+  //     };
+
+  //     // Check for overlap with existing events
+  //     isOverlapping = events.some((event) => {
+  //       const eventX = event.position?.x || 0;
+  //       const eventY = event.position?.y || 0;
+  //       return (
+  //         position.x < eventX + boxSize &&
+  //         position.x + boxSize > eventX &&
+  //         position.y < eventY + boxSize &&
+  //         position.y + boxSize > eventY
+  //       );
+  //     });
+  //   } while (isOverlapping);
+
+  //   return position;
+  // };
 
   const calculatePosition = (boxSize) => {
-    const boardWidth = 600; 
+    const boardWidth = 3000; 
     const boardHeight = 1100; 
     let position;
 
-    let isOverlapping;
-    do {
-      position = {
-        x: Math.random() * (boardWidth - boxSize),
-        y: Math.random() * (boardHeight - boxSize),
-      };
+    // Function to check if the new position overlaps with any existing events
+    const isOverlapping = (pos) => {
+        return events.some((event) => {
+            const eventX = event.position?.x || 0;
+            const eventY = event.position?.y || 0;
+            return (
+                pos.x < eventX + boxSize &&
+                pos.x + boxSize > eventX &&
+                pos.y < eventY + boxSize &&
+                pos.y + boxSize > eventY
+            );
+        });
+    };
 
-      // Check for overlap with existing events
-      isOverlapping = events.some((event) => {
-        const eventX = event.position?.x || 0;
-        const eventY = event.position?.y || 0;
-        return (
-          position.x < eventX + boxSize &&
-          position.x + boxSize > eventX &&
-          position.y < eventY + boxSize &&
-          position.y + boxSize > eventY
-        );
-      });
-    } while (isOverlapping);
+    // Attempt to find a non-overlapping position for the new event
+    for (let attempts = 0; attempts < 100; attempts++) {
+        position = {
+            x: Math.random() * (boardWidth - boxSize),
+            y: Math.random() * (boardHeight - boxSize),
+        };
 
+        if (!isOverlapping(position)) {
+            return position; // If no overlap, return the position
+        }
+    }
+
+    // If overlapping persists, resize existing events to create space
+    events.forEach((event) => {
+        const currentX = event.position?.x || 0;
+        const currentY = event.position?.y || 0;
+
+        // Calculate distance from the new position to existing event
+        const distanceX = Math.abs(position.x - currentX);
+        const distanceY = Math.abs(position.y - currentY);
+        
+        // If within a certain threshold, adjust size
+        if (distanceX < boxSize && distanceY < boxSize) {
+            // Reduce the size of existing events
+            const newSize = Math.max(100, boxSize * 0.8); // Reduce size by 20% with a minimum of 100
+            event.position = {
+                ...event.position,
+                width: newSize,
+                height: newSize,
+            };
+        }
+    });
+
+    // Re-attempt to find a non-overlapping position
+    for (let attempts = 0; attempts < 100; attempts++) {
+        position = {
+            x: Math.random() * (boardWidth - boxSize),
+            y: Math.random() * (boardHeight - boxSize),
+        };
+
+        if (!isOverlapping(position)) {
+            return position; // If no overlap, return the position
+        }
+    }
+
+    // As a last resort, return the last calculated position
     return position;
   };
 
   const handleAddEvent = (event) => {
     const boxSize = calculateBoxSize();
     const position = calculatePosition(boxSize);
-    setEvents([...events, { ...event, position }]); 
+    const colors = ["bg-pink", "bg-blue", "bg-lightblue"];
+
+    const randomColor = colors[Math.floor(Math.random() * colors.length)];
+
+    setEvents([...events, { ...event, position, color: randomColor }]); 
     handleClosePopup();
   };
 
@@ -109,7 +180,7 @@ const Community = () => {
             {events.map((event, index) => (
               <div
                 key={index}
-                className="bg-blue p-4 rounded-lg shadow-lg"
+                className={`${event.color} p-4 rounded-lg shadow-lg`}
                 style={{
                   width: `${boxSize}px`,
                   height: `${boxSize}px`,

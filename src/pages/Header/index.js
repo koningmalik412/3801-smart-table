@@ -5,7 +5,9 @@ function Header({ navLinks }) {
   const location = useLocation();
 
   return (
-    <div className="pl-[50px] pr-[50px] w-[600px] flex align-items-center justify-end">
+    <div className="pl-[50px] pr-[50px] w-[600px] flex align-items-center justify-end"
+    style={{ zIndex: 50, position: 'fixed', bottom: 30, right: 0 }}
+    >
       <nav className="bg-gray rounded-[30px] shadow-[0px_4px_15px_rgba(0,0,0,0.5)] px-0 py-4 mt-1 ml-auto w-full h-[100px] flex justify-center align-items-center">
         <div className="flex justify-between items-center">
           <div
