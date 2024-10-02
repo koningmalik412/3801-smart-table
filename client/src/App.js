@@ -16,6 +16,7 @@ import {
   Checkerboard,
 } from "@phosphor-icons/react";
 import Community from "./pages/Community";
+import RotateButton from "./pages/Header/rotate"; // Import RotateButton
 
 function App() {
   const location = useLocation();
@@ -45,6 +46,12 @@ function App() {
         <Header navLinks={navLinks} />
       </div>
 
+      {/* Position two RotateButtons */}
+      <div>
+        <RotateButton />
+      </div>
+
+      
       {/* {location.pathname === "/" && <Footer />} */}
     </div>
   );
