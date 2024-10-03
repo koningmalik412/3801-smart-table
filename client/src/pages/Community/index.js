@@ -136,14 +136,14 @@ const Community = () => {
           <h5 className="text-9xl text-brown">EVENT BOARD</h5>
         </div>
 
-        {/* Event Button */}
         <div className="absolute top-14 right-20">
-          <button
-            onClick={handleOpenPopup}
-            className="bg-pink text-brown text-5xl py-2 px-8 rounded-3xl"
+          <div 
+            onClick={handleOpenPopup} 
+            className="bg-pink rounded-full w-[350px] h-[70px] flex justify-center shadow-3xl absolute z-10 cursor-pointer"
           >
-            CREATE AN EVENT
-          </button>
+            <h6 className="text-3xl my-auto font-semibold text-brown">CREATE AN EVENT</h6>
+          </div>
+          <div className="bg-black rounded-full w-[350px] h-[70px] flex justify-center shadow-3xl relative z-0 top-1 left-1"></div>
         </div>
 
         {/* Board */}
@@ -172,11 +172,14 @@ const Community = () => {
         </div>
 
         {/* Back Button */}
-        <div className="mt-12 ml-2">
-          <Link to="/" className="bg-pink text-5xl py-2 px-8 rounded-3xl">
-            BACK
-          </Link>
-        </div>
+        <div className="flex justify-start w-full mt-10">
+        <Link to="/calendar" className="relative -top-1">
+          <div className="bg-pink rounded-full w-[250px] h-[70px] flex justify-center shadow-3xl absolute z-10">
+            <h6 className="text-3xl my-auto font-semibold text-brown">BACK</h6>
+          </div>
+          <div className="bg-black rounded-full w-[250px] h-[70px] flex justify-center shadow-3xl relative z-0 top-1 left-1"></div>
+        </Link>
+      </div>
       </div>
 
       {/* Background div */}
