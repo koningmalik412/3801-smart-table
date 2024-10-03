@@ -29,58 +29,74 @@ const AddEvent = ({ isOpen, onClose, onAddEvent }) => {
     e.preventDefault();
     const newEvent = { title, date, time, description };
     onAddEvent(newEvent);
+    // Clear fields after adding event
+    setTitle('');
+    setDate('');
+    setTime('');
+    setDescription('');
+    onClose(); // Close modal after adding
   };
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
       <div 
         ref={popupRef}
-        className="bg-blue p-8 rounded-lg shadow-lg relative w-full max-w-md"
+        className="relative p-6 w-full max-w-md bg-base rounded-2xl shadow-xl"
       >
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="flex justify-between items-center pb-4 border-b">
+          <h3 className="text-2xl font-semibold text-brown">Add Event</h3>
+          <button
+            onClick={onClose}
+            className="text-white bg-blue rounded-lg text-sm p-1.5 px-3 ml-auto"
+          >
+            x
+          </button>
+        </div>
+        
+        <form onSubmit={handleSubmit} className="space-y-4 mt-4">
           <div>
             <input
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="New Event"
-              className="mt-1 block w-full border-gray-300 rounded-md shadow-sm text-2xl py-2 px-3"
+              className="mt-1 block w-full border-gray-300 rounded-xl shadow-sm text-lg py-2 px-3 bg-lightblue"
               required
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Date</label>
+            <label className="block text-sm font-medium text-brown">Date</label>
             <input
               type="date"
               value={date}
               onChange={(e) => setDate(e.target.value)}
-              className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+              className="mt-1 block w-full border-gray-300 rounded-xl shadow-sm bg-lightblue"
               required
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Time</label>
+            <label className="block text-sm font-medium text-brown">Time</label>
             <input
               type="time"
               value={time}
               onChange={(e) => setTime(e.target.value)}
-              className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+              className="mt-1 block w-full border-gray-300 rounded-xl shadow-sm bg-lightblue"
               required
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Description</label>
+            <label className="block text-sm font-medium text-brown">Description</label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows="4"
-              className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+              className="mt-1 block w-full border-gray-300 rounded-xl shadow-sm bg-lightblue"
             ></textarea>
           </div>
-          <div className="flex justify-end">
+          <div className="flex justify-end mt-6">
             <button
               type="submit"
-              className="bg-pink text-white px-4 py-2 rounded-md hover:bg-blue-600"
+              className="px-4 py-2 bg-blue text-base rounded-lg text-white"
             >
               Add Event
             </button>
