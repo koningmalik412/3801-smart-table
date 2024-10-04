@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import chessboard from "../../assets/images/chess-board.jpeg";
 import snakes from "../../assets/images/snakes-and-ladders.png";
-import Chess from "../Games/chessboard.js"
-import Snakes from "../Games/snakesandladders.js"
-
+import Chess from "../Games/chessboard.js";
+import Snakes from "../Games/snakesandladders.js";
 
 const EnlargedChessboard = ({ onClose }) => {
   return (
@@ -59,32 +59,49 @@ const Games = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row justify-center items-stretch min-h-screen bg-base p-4">
-      <div className="w-full md:w-1/2 p-4">
-        <div className="h-full bg-pink rounded-[30px] border-[3px] border-brown overflow-hidden">
-          <div className="h-[200px] cursor-pointer" onClick={handleChessboardClick}>
-            <Chess />
+    <div className="flex flex-col items-center min-h-screen bg-base p-4">
+      <div className="block w-full p-6 bg-brown rounded-[30px] shadow-[0px_4px_15px_rgba(0,0,0,0.5)] mb-6">
+        <h5 className="text-9xl font-bold text-[#FBF6E3]">BOARD GAMES</h5>
+      </div>
+
+      <div className="flex flex-col md:flex-row justify-center items-stretch w-full h-[1000px]">
+        <div className="w-full md:w-1/2 p-4">
+          <div className="h-full bg-pink rounded-[30px] border-[3px] border-brown overflow-hidden">
+            <div className="h-[500px] cursor-pointer" onClick={handleChessboardClick}>
+              <Chess />
+            </div>
+            <div className="p-4 text-center">
+              <h2 className="text-9xl font-bold mb-2 text-darkbrown pt-20">Chess</h2>
+              <p className="text-brown text-5xl">Click the chess board to enlarge!</p>
+            </div>
           </div>
-          <div className="p-4">
-            <h2 className="text-4xl font-bold mb-2 text-darkbrown">Chess</h2>
-            <p className="text-brown text-lg">To enlargen image press the chess board!</p>
+        </div>
+        <div className="w-full md:w-1/2 p-4">
+          <div className="h-full bg-yellow rounded-[30px] border-[3px] border-brown overflow-hidden">
+            <img 
+              src={snakes} 
+              alt="Snake and Ladder Board" 
+              className="w-full h-[500px] object-cover cursor-pointer"
+              onClick={handleSnakesClick}
+            />
+            <div className="p-4 text-center">
+              <h2 className="text-9xl font-bold mb-2 text-darkbrown pt-20">Snakes and Ladders</h2>
+              <p className="text-brown text-5xl">Click the Snakes and Ladders board to enlarge!</p>
+            </div>
           </div>
         </div>
       </div>
-      <div className="w-full md:w-1/2 p-4">
-        <div className="h-full bg-yellow rounded-[30px] border-[3px] border-brown overflow-hidden">
-          <img 
-            src={snakes} 
-            alt="Snake and Ladder Board" 
-            className="w-full h-[200px] object-cover cursor-pointer"
-            onClick={handleSnakesClick}
-          />
-          <div className="p-4">
-            <h2 className="text-4xl font-bold mb-2 text-darkbrown">Snake and Ladder</h2>
-            <p className="text-brown text-lg">To enlargen image press the Snakes and Ladders!</p>
+
+
+      <div className="flex justify-start w-full mt-20"> 
+        <Link to="/calendar" className="relative -top-1">
+          <div className="bg-pink rounded-full w-[250px] h-[70px] flex justify-center shadow-3xl absolute z-10">
+            <h6 className="text-3xl my-auto font-semibold text-brown">BACK</h6>
           </div>
-        </div>
+          <div className="bg-black rounded-full w-[250px] h-[70px] flex justify-center shadow-3xl relative z-0 top-1 left-1"></div>
+        </Link>
       </div>
+
       {showEnlargedChessboard && <EnlargedChessboard onClose={handleCloseEnlarged} />}
       {showEnlargedSnakes && <EnlargedSnakesAndLadders onClose={handleCloseEnlarged} />}
     </div>

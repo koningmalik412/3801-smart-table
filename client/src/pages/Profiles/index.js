@@ -12,6 +12,7 @@ const Modal = ({ onOpen, onClose, editingProfile }) => {
       setName(editingProfile.name);
       setRole(editingProfile.role);
       setDob(editingProfile.age);
+      setFullName(editingProfile.full_name);
     }
   }, [editingProfile]);
 
@@ -42,48 +43,46 @@ const Modal = ({ onOpen, onClose, editingProfile }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center w-full h-screen bg-black bg-opacity-50">
-      <div className="relative p-6 w-full max-w-md bg-base rounded-2xl shadow-xl">
+      <div className="relative p-6 w-full max-w-3xl bg-base rounded-2xl shadow-xl">
         <div className="flex justify-between items-center pb-4 border-b">
-          <h3 className="text-2xl font-semibold text-brown">
+          <h6 className="text-5xl my-auto font-semibold text-brown">
             {editingProfile ? "Edit Profile" : "Add Profile"}
-          </h3>
+          </h6>
           <button
             onClick={onClose}
-            className="text-white bg-blue rounded-lg text-sm p-1.5 px-3 ml-auto"
+            className="text-white bg-blue rounded-lg text-2xl p-1.5 px-3 ml-auto"
           >
             x
           </button>
         </div>
 
         <div className="mt-4">
+          <p className="text-brown text-3xl">{editingProfile ? "Edit member details" : "Add a member to the family profiles"}</p>
           <input
             type="text"
             placeholder="Name"
-            className="mt-4 w-full p-2 rounded-xl bg-lightblue"
+            className="mt-4 w-full p-4 rounded-xl bg-lightblue text-3xl"
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
-
           <input
             type="text"
             placeholder="Full Name"
-            className="mt-4 w-full p-2 rounded-xl bg-lightblue"
+            className="mt-4 w-full p-4 rounded-xl bg-lightblue text-3xl"
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
           />
-
           <input
             type="text"
             placeholder="Role"
-            className="mt-4 w-full p-2 rounded-xl bg-lightblue"
+            className="mt-4 w-full p-4 rounded-xl bg-lightblue text-3xl"
             value={role}
             onChange={(e) => setRole(e.target.value)}
           />
-
           <input
             type="text"
             placeholder="Date of Birth"
-            className="mt-4 w-full p-2 rounded-xl bg-lightblue"
+            className="mt-4 w-full p-4 rounded-xl bg-lightblue text-3xl"
             value={dob}
             onChange={(e) => setDob(e.target.value)}
           />
@@ -92,7 +91,7 @@ const Modal = ({ onOpen, onClose, editingProfile }) => {
         <div className="mt-6 flex justify-end">
           <button
             onClick={handleSubmit}
-            className="px-4 py-2 bg-blue text-base rounded-lg"
+            className="px-6 py-4 bg-blue text-base rounded-lg text-2xl"
           >
             Save
           </button>
@@ -131,7 +130,7 @@ const Profiles = () => {
       });
 
       if (response.ok) {
-        setProfiles(profiles.filter((profile) => profile.id !== id));
+        setProfiles(profiles.filter((profile) => profile._id !== id));
       } else {
         console.error("Failed to delete profile from database");
       }
@@ -142,56 +141,48 @@ const Profiles = () => {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-between p-8">
-      <div className=" w-full p-6 bg-brown border rounded-[30px] shadow flex justify-between items-center">
-        <h5 className="text-8xl font-bold text-[#FBF6E3]">FAMILY PROFILES</h5>
-        <button
-          onClick={() => openModal(null)}
-          className="bg-pink text-brown px-6 py-3 rounded-full shadow-3xl"
-        >
-          Add Profile
-        </button>
+      <div className="block w-full p-6 bg-brown border rounded-[30px] shadow flex justify-between items-center">
+        <h5 className="text-9xl font-bold text-[#FBF6E3]">FAMILY PROFILES</h5>
+        <div className="relative -top-1 cursor-pointer" onClick={() => openModal(null)}>
+          <div className="bg-pink rounded-full w-[250px] h-[70px] flex justify-center shadow-3xl absolute z-10">
+            <h6 className="text-3xl my-auto font-semibold text-brown">Add Profile</h6>
+          </div>
+          <div className="bg-black rounded-full w-[250px] h-[70px] flex justify-center shadow-3xl relative z-0 top-1 left-1"></div>
+        </div>
       </div>
 
-      <div className="w-full h-auto mt-6 p-8 border-4 border-brown rounded-3xl bg-lightblue flex flex-col items-center">
-        <div className="flex gap-10 justify-center items-center w-full">
-          {profiles.map((profile) => (
-            <div
-              key={profile.id}
-              className="h-80 p-10 w-full rounded-3xl shadow-[0px_4px_15px_rgba(0,0,0,0.5)] bg-base"
-            >
-              <div className="flex flex-col items-center pb-10">
-                <img
-                  className="w-24 h-24 mb-3 rounded-full shadow-lg"
-                  src={profile.image || ""}
-                  alt={profile.name}
-                />
-                <h5 className="mb-1 text-2xl text-blue">{profile.name}</h5>
-                <span className="text-sm text-brown">{profile.role}</span>
-                <p className="text-sm text-brown">
-                  Date of Birth: {profile.dob}
-                </p>
-                <p className="text-sm text-brown">
-                  Full Name: {profile.full_name}
-                </p>
+      <div className="w-full min-h-[900px] mt-6 p-8 border-4 border-brown rounded-3xl bg-lightblue flex flex-wrap justify-center items-center">
+        {profiles.map((profile) => (
+          <div
+            key={profile._id}
+            className="h-90 w-[calc(50%-20px)] p-10 m-2 rounded-3xl shadow-[0px_4px_15px_rgba(0,0,0,0.5)] bg-base flex flex-col items-center"
+          >
+            <img
+              className="w-24 h-24 mb-3 rounded-full shadow-lg"
+              src={profile.image || ""}
+              alt={profile.name}
+            />
+            <h5 className="mb-1 text-6xl text-blue">{profile.name}</h5>
+            <span className="text-2xl text-brown">{profile.role}</span>
+            <p className="text-2xl text-brown">Date of Birth: {profile.dob}</p>
+            <p className="text-2xl text-brown">Full Name: {profile.full_name}</p>
 
-                <div className="flex justify-center space-x-4 mt-4">
-                  <button
-                    className="px-4 py-2 bg-blue text-base rounded-lg"
-                    onClick={() => openModal(profile)}
-                  >
-                    Edit
-                  </button>
-                  <button
-                    className="px-4 py-2 bg-blue text-base rounded-lg"
-                    onClick={() => handleDelete(profile.id)}
-                  >
-                    Delete
-                  </button>
-                </div>
-              </div>
+            <div className="flex justify-center space-x-5 mt-4">
+              <button
+                className="px-9 py-4 bg-blue text-base rounded-lg text-xl"
+                onClick={() => openModal(profile)}
+              >
+                Edit
+              </button>
+              <button
+                className="px-9 py-4 bg-blue text-base rounded-lg text-xl"
+                onClick={() => handleDelete(profile._id)}
+              >
+                Delete
+              </button>
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
 
       <Modal
@@ -201,10 +192,11 @@ const Profiles = () => {
       />
 
       <div className="flex justify-start w-full">
-        <Link to="/calendar">
-          <button className="bg-pink text-brown px-6 py-3 rounded-full">
-            BACK
-          </button>
+        <Link to="/calendar" className="relative -top-1">
+          <div className="bg-pink rounded-full w-[250px] h-[70px] flex justify-center shadow-3xl absolute z-10">
+            <h6 className="text-3xl my-auto font-semibold text-brown">BACK</h6>
+          </div>
+          <div className="bg-black rounded-full w-[250px] h-[70px] flex justify-center shadow-3xl relative z-0 top-1 left-1"></div>
         </Link>
       </div>
     </div>
