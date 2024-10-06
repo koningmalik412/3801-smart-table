@@ -198,11 +198,11 @@ const Community = () => {
         </div>
 
         {/* Back Button */}
-        <div className="mt-12 ml-2">
+        {/* <div className="mt-12 ml-2">
           <Link to="/" className="bg-pink text-5xl py-2 px-8 rounded-3xl">
             BACK
           </Link>
-        </div>
+        </div> */}
       </div>
 
       {/* Background div */}
