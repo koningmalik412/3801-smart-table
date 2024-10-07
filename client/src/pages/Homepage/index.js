@@ -40,7 +40,7 @@ const Homepage = () => {
           </div>
           <div className="flex mt-6 gap-4">
             <Link to="/games" className="w-4/6">
-              <div className="h-[500px] w-full p-10 rounded-[30px] shadow-[0px_4px_15px_rgba(0,0,0,0.5)] bg-pink bg-base flex flex-col justify-center items-center">
+              <div className="h-[500px] w-full p-10 rounded-[30px] shadow-[0px_4px_15px_rgba(0,0,0,0.5)] bg-pink flex flex-col justify-center items-center">
                 <h3 className="text-9xl font-bold text-brown ml-7 font-pathway">
                   Games
                 </h3>
@@ -52,7 +52,7 @@ const Homepage = () => {
               </div>
             </Link>
             <Link to="/settings" className="w-2/6">
-              <div className="h-[500px] w-full p-10 rounded-[30px] shadow-[0px_4px_15px_rgba(0,0,0,0.5)] bg-base bg-base flex flex-col justify-center items-center">
+              <div className="h-[500px] w-full p-10 rounded-[30px] shadow-[0px_4px_15px_rgba(0,0,0,0.5)] bg-base flex flex-col justify-center items-center">
                 <h3 className="text-9xl font-bold text-brown ml-7 font-pathway">
                   Settings
                 </h3>
@@ -67,7 +67,7 @@ const Homepage = () => {
         </div>
         <div className="w-2/6 p-4">
           <Link to="/community">
-            <div className="h-[1000px] w-full p-10 rounded-[30px] shadow-[0px_4px_15px_rgba(0,0,0,0.5)] bg-yellow bg-base flex flex-col justify-center items-center">
+            <div className="h-[1000px] w-full p-10 rounded-[30px] shadow-[0px_4px_15px_rgba(0,0,0,0.5)] bg-yellow flex flex-col justify-center items-center">
               <h3 className="text-9xl font-bold text-brown ml-7 font-pathway">
                 Event Board
               </h3>
