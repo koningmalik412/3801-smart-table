@@ -1,4 +1,7 @@
 How to run
 
-1. To run desktop app: npm start
-2. To run on web: npm start-web
+1. Make sure to install all packages: ```npm install```
+
+2. To run on desktop app: ```npm start```
+
+3. To run on web: ```npm run start-web```

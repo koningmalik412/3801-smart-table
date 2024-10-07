@@ -6,7 +6,8 @@
     "start": "concurrently \"npm run electron:serve --prefix client\" \"npm run start --prefix server\"",
     "start-web": "concurrently \"npm run start --prefix client\" \"npm run start --prefix server\"",
     "client": "npm start --prefix client",
-    "server": "npm start --prefix server"
+    "server": "npm start --prefix server",
+    "postinstall": "cd server && npm install && cd ../client && npm install"
   },
   "keywords": [],
   "author": "",
