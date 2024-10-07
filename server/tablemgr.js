@@ -17,32 +17,32 @@ exports.getEventById = (id) => {
 
 exports.createEvent = (event) => {
   const sql =
-    "INSERT INTO Events (title, description, is_all_day, start_time, end_time, location, is_clash) VALUES (?, ?, ?, ?, ?)";
+    "INSERT INTO Events (title, description, isAllDay, startTime, endTime, location, isClash) VALUES (?, ?, ?, ?, ?)";
   let stmt = db.prepare(sql);
   let result = stmt.run(
     event.title,
     event.description,
-    event.is_all_day,
-    event.start_time,
-    event.end_time,
+    event.isAllDay,
+    event.startTime,
+    event.endTime,
     event.location,
-    event.is_clash
+    event.isClash
   );
   return result;
 };
 
 exports.updateEvent = (id, event) => {
   const sql =
-    "UPDATE Events SET title = ?, description = ?, is_all_day = ?, start_time = ?, end_time = ?, location = ?, is_clash = ? WHERE id = ?";
+    "UPDATE Events SET title = ?, description = ?, isAllDay = ?, startTime = ?, endTime = ?, location = ?, isClash = ? WHERE id = ?";
   let stmt = db.prepare(sql);
   let result = stmt.run(
     event.title,
     event.description,
-    event.is_all_day,
-    event.start_time,
-    event.end_time,
+    event.isAllDay,
+    event.startTime,
+    event.endTime,
     event.location,
-    event.is_clash,
+    event.isClash,
     id
   );
   return result;
