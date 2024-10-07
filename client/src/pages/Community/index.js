@@ -11,10 +11,14 @@ const Community = () => {
 
   const calculateBoxSize = () => {
     const minSize = 100; // Minimum size of the post-it box
-    const maxSize = 600; // Maximum size of the post-it box
+    const maxSize = 800; // Maximum size of the post-it box
     const numEvents = events.length;
-    const maxEvents = 9; // Maximum number of events to fit nicely
-    const size = Math.max(minSize, Math.min(maxSize, (3000 / Math.ceil(numEvents / 3)) * 0.9));
+    const maxEvents = 12; // Maximum number of events to fit nicely
+  
+    // Adjust the box size based on the number of events
+    const sizeFactor = Math.max(1, maxEvents - numEvents); 
+    const size = Math.max(minSize, Math.min(maxSize, (maxSize / maxEvents) * sizeFactor));
+  
     return size;
   };
 
@@ -86,15 +90,21 @@ const Community = () => {
     return position;
   };
 
+  const [previousColor, setPreviousColor] = useState(null); // Track the previous color
+
   const handleAddEvent = (event) => {
-    const boxSize = calculateBoxSize();
-    const position = calculatePosition(boxSize);
-    const colors = ["bg-pink", "bg-blue", "bg-lightblue"];
+      const boxSize = calculateBoxSize();
+      const position = calculatePosition(boxSize);
+      const colors = ["bg-pink", "bg-blue", "bg-lightblue"];
 
-    const randomColor = colors[Math.floor(Math.random() * colors.length)];
+      // Filter out the previous color to avoid repeating
+      const availableColors = colors.filter(color => color !== previousColor);
+      const randomColor = availableColors[Math.floor(Math.random() * availableColors.length)];
 
-    setEvents([...events, { ...event, position, color: randomColor }]); 
-    handleClosePopup();
+      setEvents([...events, { ...event, position, color: randomColor }]);
+      setPreviousColor(randomColor); // Update the previous color after assigning
+
+      handleClosePopup();
   };
 
   const [draggingIndex, setDraggingIndex] = useState(null);
@@ -110,12 +120,27 @@ const Community = () => {
 
   const handleMouseMove = (e) => {
     if (draggingIndex !== null) {
+      const boardWidth = 3000; // Width of the event board
+      const boardHeight = 1100; // Height of the event board
+      const boxSize = calculateBoxSize(); // Current size of the dragged box
+      
+      // Calculate new position with boundary checks
+      let newX = e.clientX - offset.x - 50; // Adjust the x position based on offset
+      let newY = e.clientY - offset.y - 187; // Adjust the y position based on offset
+      
+      // Add buffer to the boundaries (e.g., 100px)
+      const buffer = 100;
+
+      // Ensure the new X position is within the board boundaries
+      newX = Math.max(-buffer, Math.min(newX, boardWidth - boxSize + buffer));
+      newY = Math.max(-buffer, Math.min(newY, boardHeight - boxSize + buffer));
+  
       const newEvents = [...events];
       newEvents[draggingIndex] = {
         ...newEvents[draggingIndex],
         position: {
-          x: e.clientX - offset.x - 50,
-          y: e.clientY - offset.y - 195,
+          x: newX,
+          y: newY,
         },
       };
       setEvents(newEvents);
@@ -147,7 +172,8 @@ const Community = () => {
         </div>
 
         {/* Board */}
-        <div className="bg-base h-[1100px] w-full rounded-[30px] border-[3px] border-brown p-4 overflow-auto relative">
+        <div className="bg-base h-[1100px] w-full rounded-[30px] border-[3px] border-brown p-4 overflow-auto relative"
+         onMouseLeave={handleMouseUp}>
           <div className="grid grid-cols-3 gap-4">
             {events.map((event, index) => (
               <div
@@ -172,14 +198,11 @@ const Community = () => {
         </div>
 
         {/* Back Button */}
-        <div className="flex justify-start w-full mt-10">
-        <Link to="/calendar" className="relative -top-1">
-          <div className="bg-pink rounded-full w-[250px] h-[70px] flex justify-center shadow-3xl absolute z-10">
-            <h6 className="text-3xl my-auto font-semibold text-brown">BACK</h6>
-          </div>
-          <div className="bg-black rounded-full w-[250px] h-[70px] flex justify-center shadow-3xl relative z-0 top-1 left-1"></div>
-        </Link>
-      </div>
+        {/* <div className="mt-12 ml-2">
+          <Link to="/" className="bg-pink text-5xl py-2 px-8 rounded-3xl">
+            BACK
+          </Link>
+        </div> */}
       </div>
 
       {/* Background div */}
