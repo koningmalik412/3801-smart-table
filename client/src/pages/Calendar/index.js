@@ -95,14 +95,6 @@ const CalendarPage = () => {
           </div>
         </div>
 
-        <div className="absolute left-[100px] bottom-[30px]">
-          <Link to="/" className="relative -top-1">
-            <div className="bg-pink rounded-full w-[230px] h-[70px] flex justify-center shadow-3xl absolute z-10">
-              <h6 className="text-3xl my-auto font-semibold text-brown">BACK</h6>
-            </div>
-            <div className="bg-black rounded-full w-[230px] h-[70px] flex justify-center shadow-3xl relative z-0 top-1 left-1"></div>
-          </Link>
-        </div>
       </div>
     </div>
   );

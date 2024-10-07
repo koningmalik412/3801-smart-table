@@ -191,14 +191,6 @@ const Profiles = () => {
         editingProfile={editingProfile}
       />
 
-      <div className="flex justify-start w-full">
-        <Link to="/calendar" className="relative -top-1">
-          <div className="bg-pink rounded-full w-[250px] h-[70px] flex justify-center shadow-3xl absolute z-10">
-            <h6 className="text-3xl my-auto font-semibold text-brown">BACK</h6>
-          </div>
-          <div className="bg-black rounded-full w-[250px] h-[70px] flex justify-center shadow-3xl relative z-0 top-1 left-1"></div>
-        </Link>
-      </div>
     </div>
   );
 };
