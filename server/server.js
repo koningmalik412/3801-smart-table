@@ -3,6 +3,9 @@ const tablemgr = require("./tablemgr"); // Import the table manager with databas
 const app = express();
 const PORT = 3001;
 
+const cors = require("cors");
+app.use(cors());
+
 // Middleware to allow JSON responses and CORS for frontend
 app.use(express.json());
 app.use((req, res, next) => {
@@ -52,7 +55,7 @@ app.put("/api/events/:id", (req, res) => {
   const updatedEvent = req.body;
   try {
     const changes = tablemgr.updateEvent(eventId, updatedEvent);
-    if (changes > 0) {
+    if (changes.changes > 0) {
       res.json({ message: "Event updated successfully" });
     } else {
       res.status(404).json({ error: "Event not found" });
@@ -66,7 +69,7 @@ app.delete("/api/events/:id", (req, res) => {
   const eventId = req.params.id;
   try {
     const changes = tablemgr.deleteEvent(eventId);
-    if (changes > 0) {
+    if (changes.changes > 0) {
       res.json({ message: "Event deleted successfully" });
     } else {
       res.status(404).json({ error: "Event not found" });
@@ -117,7 +120,7 @@ app.put("/api/profiles/:id", (req, res) => {
   const updatedProfile = req.body;
   try {
     const changes = tablemgr.updateProfile(profileId, updatedProfile);
-    if (changes > 0) {
+    if (changes.changes > 0) {
       res.json({ message: "Profile updated successfully" });
     } else {
       res.status(404).json({ error: "Profile not found" });
@@ -131,7 +134,7 @@ app.delete("/api/profiles/:id", (req, res) => {
   const profileId = req.params.id;
   try {
     const changes = tablemgr.deleteProfile(profileId);
-    if (changes > 0) {
+    if (changes.changes > 0) {
       res.json({ message: "Profile deleted successfully" });
     } else {
       res.status(404).json({ error: "Profile not found" });

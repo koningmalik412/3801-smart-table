@@ -6,20 +6,23 @@ const Modal = ({ onOpen, onClose, editingProfile }) => {
   const [fullName, setFullName] = useState("");
   const [role, setRole] = useState("");
   const [dob, setDob] = useState("");
+  const [image, setImage] = useState("");
 
   useEffect(() => {
     if (editingProfile) {
       setName(editingProfile.name);
       setRole(editingProfile.role);
-      setDob(editingProfile.age);
-      setFullName(editingProfile.full_name);
+      setDob(editingProfile.dob);
+      setFullName(editingProfile.fullName);
+      setImage(editingProfile.image);
     }
   }, [editingProfile]);
 
   const handleSubmit = async () => {
-    const profileData = { name, fullName, role, dob };
+    const profileData = { name, fullName, role, dob, image };
     if (editingProfile) {
-      await fetch(`http://localhost:3001/api/profiles/${editingProfile._id}`, {
+      console.log(JSON.stringify(profileData));
+      await fetch(`http://localhost:3001/api/profiles/${editingProfile.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -57,7 +60,11 @@ const Modal = ({ onOpen, onClose, editingProfile }) => {
         </div>
 
         <div className="mt-4">
-          <p className="text-brown text-3xl">{editingProfile ? "Edit member details" : "Add a member to the family profiles"}</p>
+          <p className="text-brown text-3xl">
+            {editingProfile
+              ? "Edit member details"
+              : "Add a member to the family profiles"}
+          </p>
           <input
             type="text"
             placeholder="Name"
@@ -85,6 +92,13 @@ const Modal = ({ onOpen, onClose, editingProfile }) => {
             className="mt-4 w-full p-4 rounded-xl bg-lightblue text-3xl"
             value={dob}
             onChange={(e) => setDob(e.target.value)}
+          />
+          <input
+            type="text"
+            placeholder="Image"
+            className="mt-4 w-full p-4 rounded-xl bg-lightblue text-3xl"
+            value={image}
+            onChange={(e) => setImage(e.target.value)}
           />
         </div>
 
@@ -130,7 +144,7 @@ const Profiles = () => {
       });
 
       if (response.ok) {
-        setProfiles(profiles.filter((profile) => profile._id !== id));
+        setProfiles(profiles.filter((profile) => profile.id !== id));
       } else {
         console.error("Failed to delete profile from database");
       }
@@ -141,11 +155,16 @@ const Profiles = () => {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-between p-8">
-      <div className="block w-full p-6 bg-brown border rounded-[30px] shadow flex justify-between items-center">
+      <div className="w-full p-6 bg-brown border rounded-[30px] shadow flex justify-between items-center">
         <h5 className="text-9xl font-bold text-[#FBF6E3]">FAMILY PROFILES</h5>
-        <div className="relative -top-1 cursor-pointer" onClick={() => openModal(null)}>
+        <div
+          className="relative -top-1 cursor-pointer"
+          onClick={() => openModal(null)}
+        >
           <div className="bg-pink rounded-full w-[250px] h-[70px] flex justify-center shadow-3xl absolute z-10">
-            <h6 className="text-3xl my-auto font-semibold text-brown">Add Profile</h6>
+            <h6 className="text-3xl my-auto font-semibold text-brown">
+              Add Profile
+            </h6>
           </div>
           <div className="bg-black rounded-full w-[250px] h-[70px] flex justify-center shadow-3xl relative z-0 top-1 left-1"></div>
         </div>
@@ -154,7 +173,7 @@ const Profiles = () => {
       <div className="w-full min-h-[900px] mt-6 p-8 border-4 border-brown rounded-3xl bg-lightblue flex flex-wrap justify-center items-center">
         {profiles.map((profile) => (
           <div
-            key={profile._id}
+            key={profile.id}
             className="h-90 w-[calc(50%-20px)] p-10 m-2 rounded-3xl shadow-[0px_4px_15px_rgba(0,0,0,0.5)] bg-base flex flex-col items-center"
           >
             <img
@@ -165,7 +184,7 @@ const Profiles = () => {
             <h5 className="mb-1 text-6xl text-blue">{profile.name}</h5>
             <span className="text-2xl text-brown">{profile.role}</span>
             <p className="text-2xl text-brown">Date of Birth: {profile.dob}</p>
-            <p className="text-2xl text-brown">Full Name: {profile.full_name}</p>
+            <p className="text-2xl text-brown">Full Name: {profile.fullName}</p>
 
             <div className="flex justify-center space-x-5 mt-4">
               <button
@@ -176,7 +195,7 @@ const Profiles = () => {
               </button>
               <button
                 className="px-9 py-4 bg-blue text-base rounded-lg text-xl"
-                onClick={() => handleDelete(profile._id)}
+                onClick={() => handleDelete(profile.id)}
               >
                 Delete
               </button>
