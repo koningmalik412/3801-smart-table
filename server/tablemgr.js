@@ -71,11 +71,11 @@ exports.getProfileById = (id) => {
 
 exports.createProfile = (profile) => {
   const sql =
-    "INSERT INTO Profiles (name, full_name, role, dob, image) VALUES (?, ?, ?, ?, ?)";
+    "INSERT INTO Profiles (name, fullName, role, dob, image) VALUES (?, ?, ?, ?, ?)";
   let stmt = db.prepare(sql);
   let result = stmt.run(
     profile.name,
-    profile.full_name,
+    profile.fullName,
     profile.role,
     profile.dob,
     profile.image
@@ -85,11 +85,11 @@ exports.createProfile = (profile) => {
 
 exports.updateProfile = (id, profile) => {
   const sql =
-    "UPDATE Profiles SET name = ?, full_name = ?, role = ?, dob = ?, image = ? WHERE id = ?";
+    "UPDATE Profiles SET name = ?, fullName = ?, role = ?, dob = ?, image = ? WHERE id = ?";
   let stmt = db.prepare(sql);
   let result = stmt.run(
     profile.name,
-    profile.full_name,
+    profile.fullName,
     profile.role,
     profile.dob,
     profile.image,
