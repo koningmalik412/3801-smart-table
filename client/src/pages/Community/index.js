@@ -1,5 +1,4 @@
 import React, { useState} from "react";
-import { Link } from "react-router-dom";
 import AddEvent from "./addEvent.js";
 
 const Community = () => {
@@ -196,13 +195,6 @@ const Community = () => {
             ))}
           </div>
         </div>
-
-        {/* Back Button */}
-        {/* <div className="mt-12 ml-2">
-          <Link to="/" className="bg-pink text-5xl py-2 px-8 rounded-3xl">
-            BACK
-          </Link>
-        </div> */}
       </div>
 
       {/* Background div */}
