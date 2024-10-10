@@ -1,215 +1,232 @@
-import React, { useState} from "react";
-import { Link } from "react-router-dom";
-import AddEvent from "./addEvent.js";
+import React, { useEffect, useState } from "react";
 
-const Community = () => {
-  const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const [events, setEvents] = useState([]);
+const EventModal = ({ onOpen, onClose, editingEvent }) => {
+  const [title, setTitle] = useState("");
+  const [location, setLocation] = useState("");
+  const [description, setDescription] = useState("");
+  const [isAllDay, setIsAllDay] = useState(0);
+  const [startTime, setStartTime] = useState("");
+  const [endTime, setEndTime] = useState("");
+  const [isClash, setIsClash] = useState(0);
 
-  const handleOpenPopup = () => setIsPopupOpen(true);
-  const handleClosePopup = () => setIsPopupOpen(false);
+  useEffect(() => {
+    if (editingEvent) {
+      setTitle(editingEvent.title);
+      setLocation(editingEvent.location);
+      setDescription(editingEvent.description);
+      setIsAllDay(editingEvent.isAllDay || 0);
+      setStartTime(editingEvent.startTime || "");
+      setEndTime(editingEvent.endTime || "");
+      setIsClash(editingEvent.isClash || 0);
+    }
+  }, [editingEvent]);
 
-  const calculateBoxSize = () => {
-    const minSize = 100; // Minimum size of the post-it box
-    const maxSize = 800; // Maximum size of the post-it box
-    const numEvents = events.length;
-    const maxEvents = 12; // Maximum number of events to fit nicely
-  
-    // Adjust the box size based on the number of events
-    const sizeFactor = Math.max(1, maxEvents - numEvents); 
-    const size = Math.max(minSize, Math.min(maxSize, (maxSize / maxEvents) * sizeFactor));
-  
-    return size;
-  };
-
-  const calculatePosition = (boxSize) => {
-    const boardWidth = 3000; 
-    const boardHeight = 1100; 
-    let position;
-
-    // Function to check if the new position overlaps with any existing events
-    const isOverlapping = (pos) => {
-        return events.some((event) => {
-            const eventX = event.position?.x || 0;
-            const eventY = event.position?.y || 0;
-            return (
-                pos.x < eventX + boxSize &&
-                pos.x + boxSize > eventX &&
-                pos.y < eventY + boxSize &&
-                pos.y + boxSize > eventY
-            );
-        });
+  const handleSubmit = async () => {
+    const eventData = {
+      title,
+      description,
+      isAllDay: isAllDay ? 1 : 0,
+      startTime,
+      endTime,
+      location,
+      isClash: isClash ? 1 : 0,
     };
 
-    // Attempt to find a non-overlapping position for the new event
-    for (let attempts = 0; attempts < 100; attempts++) {
-        position = {
-            x: Math.random() * (boardWidth - boxSize),
-            y: Math.random() * (boardHeight - boxSize),
-        };
+    console.log(eventData)
 
-        if (!isOverlapping(position)) {
-            return position; // If no overlap, return the position
-        }
-    }
-
-    // If overlapping persists, resize existing events to create space
-    events.forEach((event) => {
-        const currentX = event.position?.x || 0;
-        const currentY = event.position?.y || 0;
-
-        // Calculate distance from the new position to existing event
-        const distanceX = Math.abs(position.x - currentX);
-        const distanceY = Math.abs(position.y - currentY);
-        
-        // If within a certain threshold, adjust size
-        if (distanceX < boxSize && distanceY < boxSize) {
-            // Reduce the size of existing events
-            const newSize = Math.max(100, boxSize * 0.8); // Reduce size by 20% with a minimum of 100
-            event.position = {
-                ...event.position,
-                width: newSize,
-                height: newSize,
-            };
-        }
-    });
-
-    // Re-attempt to find a non-overlapping position
-    for (let attempts = 0; attempts < 100; attempts++) {
-        position = {
-            x: Math.random() * (boardWidth - boxSize),
-            y: Math.random() * (boardHeight - boxSize),
-        };
-
-        if (!isOverlapping(position)) {
-            return position; // If no overlap, return the position
-        }
-    }
-
-    // As a last resort, return the last calculated position
-    return position;
-  };
-
-  const [previousColor, setPreviousColor] = useState(null); // Track the previous color
-
-  const handleAddEvent = (event) => {
-      const boxSize = calculateBoxSize();
-      const position = calculatePosition(boxSize);
-      const colors = ["bg-pink", "bg-blue", "bg-lightblue"];
-
-      // Filter out the previous color to avoid repeating
-      const availableColors = colors.filter(color => color !== previousColor);
-      const randomColor = availableColors[Math.floor(Math.random() * availableColors.length)];
-
-      setEvents([...events, { ...event, position, color: randomColor }]);
-      setPreviousColor(randomColor); // Update the previous color after assigning
-
-      handleClosePopup();
-  };
-
-  const [draggingIndex, setDraggingIndex] = useState(null);
-  const [offset, setOffset] = useState({ x: 0, y: 0 });
-
-  const handleMouseDown = (e, index) => {
-    setDraggingIndex(index);
-    setOffset({
-      x: e.clientX - e.currentTarget.getBoundingClientRect().left,
-      y: e.clientY - e.currentTarget.getBoundingClientRect().top,
-    });
-  };
-
-  const handleMouseMove = (e) => {
-    if (draggingIndex !== null) {
-      const boardWidth = 3000; // Width of the event board
-      const boardHeight = 1100; // Height of the event board
-      const boxSize = calculateBoxSize(); // Current size of the dragged box
-      
-      // Calculate new position with boundary checks
-      let newX = e.clientX - offset.x - 50; // Adjust the x position based on offset
-      let newY = e.clientY - offset.y - 187; // Adjust the y position based on offset
-      
-      // Add buffer to the boundaries (e.g., 100px)
-      const buffer = 100;
-
-      // Ensure the new X position is within the board boundaries
-      newX = Math.max(-buffer, Math.min(newX, boardWidth - boxSize + buffer));
-      newY = Math.max(-buffer, Math.min(newY, boardHeight - boxSize + buffer));
-  
-      const newEvents = [...events];
-      newEvents[draggingIndex] = {
-        ...newEvents[draggingIndex],
-        position: {
-          x: newX,
-          y: newY,
+    if (editingEvent) {
+      await fetch(`http://localhost:3001/api/events/${editingEvent.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
         },
-      };
-      setEvents(newEvents);
+        body: JSON.stringify(eventData),
+      });
+    } else {
+      await fetch("http://localhost:3001/api/events", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(eventData),
+      });
     }
+    onClose();
   };
 
-  const handleMouseUp = () => {
-    setDraggingIndex(null);
-  };
-
-  const boxSize = calculateBoxSize();
+  if (!onOpen) return null;
 
   return (
-    <>
-      <div className="absolute w-full px-12 z-10" onMouseMove={handleMouseMove} onMouseUp={handleMouseUp}>
-        {/* Title */}
-        <div className="block mt-12 mb-2">
-          <h5 className="text-9xl text-brown">EVENT BOARD</h5>
+    <div className="fixed inset-0 z-50 flex items-center justify-center w-full h-screen bg-black bg-opacity-50">
+      <div className="relative p-6 w-full max-w-3xl bg-white rounded-2xl shadow-xl">
+        <div className="flex justify-between items-center pb-4 border-b">
+          <h6 className="text-3xl">
+            {editingEvent ? "Edit Event" : "Create Event"}
+          </h6>
+          <button onClick={onClose} className="text-xl p-1.5">x</button>
         </div>
 
-        <div className="absolute top-14 right-20">
-          <div 
-            onClick={handleOpenPopup} 
-            className="bg-pink rounded-full w-[350px] h-[70px] flex justify-center shadow-3xl absolute z-10 cursor-pointer"
+        <div className="mt-4">
+          <input
+            type="text"
+            placeholder="Event Title"
+            className="mt-4 w-full p-4 rounded-xl"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
+          <input
+            type="text"
+            placeholder="Location"
+            className="mt-4 w-full p-4 rounded-xl"
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
+          />
+          <textarea
+            placeholder="Description"
+            className="mt-4 w-full p-4 rounded-xl"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
+
+          <div className="mt-4 flex items-center">
+            <input
+              type="checkbox"
+              checked={isAllDay}
+              onChange={(e) => setIsAllDay(e.target.checked)}
+              className="mr-2"
+            />
+            <label>All Day Event</label>
+          </div>
+
+          <input
+            type="text"
+            placeholder="Start Time"
+            className="mt-4 w-full p-4 rounded-xl"
+            value={startTime}
+            onChange={(e) => setStartTime(e.target.value)}
+          />
+          <input
+            type="text"
+            placeholder="End Time"
+            className="mt-4 w-full p-4 rounded-xl"
+            value={endTime}
+            onChange={(e) => setEndTime(e.target.value)}
+          />
+          
+          <div className="mt-4 flex items-center">
+            <input
+              type="checkbox"
+              checked={isClash}
+              onChange={(e) => setIsClash(e.target.checked)}
+              className="mr-2"
+            />
+            <label>Allow Event Clashes</label>
+          </div>
+        </div>
+
+        <div className="mt-6 flex justify-end">
+          <button
+            onClick={handleSubmit}
+            className="px-6 py-4 bg-blue text-white rounded-lg"
           >
-            <h6 className="text-3xl my-auto font-semibold text-brown">CREATE AN EVENT</h6>
-          </div>
-          <div className="bg-black rounded-full w-[350px] h-[70px] flex justify-center shadow-3xl relative z-0 top-1 left-1"></div>
+            Save
+          </button>
         </div>
-
-        {/* Board */}
-        <div className="bg-base h-[1100px] w-full rounded-[30px] border-[3px] border-brown p-4 overflow-auto relative"
-         onMouseLeave={handleMouseUp}>
-          <div className="grid grid-cols-3 gap-4">
-            {events.map((event, index) => (
-              <div
-                key={index}
-                className={`${event.color} p-4 rounded-lg shadow-lg`}
-                style={{
-                  width: `${boxSize}px`,
-                  height: `${boxSize}px`,
-                  position: "absolute",
-                  left: event.position?.x || 0, 
-                  top: event.position?.y || 0, 
-                }}
-                onMouseDown={(e) => handleMouseDown(e, index)}
-              >
-                <h3 className="text-6xl font-bold">{event.title}</h3>
-                <p className="text-4xl">{event.date}</p>
-                <p className="text-2xl">{event.time}</p>
-                <p className="text-4xl">{event.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Back Button */}
-        {/* <div className="mt-12 ml-2">
-          <Link to="/" className="bg-pink text-5xl py-2 px-8 rounded-3xl">
-            BACK
-          </Link>
-        </div> */}
       </div>
-
-      {/* Background div */}
-      <div className="absolute bottom-0 left-0 w-full h-[1050px] bg-brown z-0"></div>
-      <AddEvent isOpen={isPopupOpen} onClose={handleClosePopup} onAddEvent={handleAddEvent} />
-    </>
+    </div>
   );
 };
 
-export default Community;
+const EventPage = () => {
+  const [events, setEvents] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingEvent, setEditingEvent] = useState(null);
+
+  useEffect(() => {
+    fetch("http://localhost:3001/api/events")
+      .then((response) => response.json())
+      .then((data) => setEvents(data))
+      .catch((error) => console.error("Error fetching events:", error));
+  }, []);
+
+  const openModal = (event = null) => {
+    setEditingEvent(event);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setEditingEvent(null);
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:3001/api/events/${id}`, {
+        method: "DELETE",
+      });
+
+      if (response.ok) {
+        setEvents(events.filter((event) => event.id !== id));
+      } else {
+        console.error("Failed to delete event from database");
+      }
+    } catch (error) {
+      console.error("Failed to delete event:", error);
+    }
+  };
+
+  return (
+    <div className="min-h-screen flex flex-col items-center justify-between p-8">
+      <div className="w-full p-6 bg-blue border rounded shadow flex justify-between items-center">
+        <h5 className="text-3xl font-bold text-white">EVENTS</h5>
+        <button
+          onClick={() => openModal(null)}
+          className="bg-green-500 text-white px-4 py-2 rounded"
+        >
+          Add Event
+        </button>
+      </div>
+
+      <div className="w-full mt-6 grid grid-cols-2 gap-4">
+        {events.map((event) => (
+          <div
+            key={event.id}
+            className="p-6 bg-white border rounded-lg shadow-lg"
+          >
+            <h5 className="text-2xl">{event.title}</h5>
+            <p>Location: {event.location}</p>
+            <p>Description: {event.description}</p>
+            {/* if  even.isAllDay == 1: */}
+            <p>All Day: {event.isAllDay === 1 ? "Yes" : "No"}</p>
+            <p>Start Time: {event.startTime}</p>
+            <p>End Time: {event.endTime}</p>
+            {/* <p>Clash Allowed: {event.isClash === 1 ? "Yes" : "No"}</p> */}
+
+            <div className="flex justify-between mt-4">
+              <button
+                onClick={() => openModal(event)}
+                className="bg-blue-500 text-white px-4 py-2 rounded"
+              >
+                Edit
+              </button>
+              <button
+                onClick={() => handleDelete(event.id)}
+                className="bg-red-500 text-white px-4 py-2 rounded"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <EventModal
+        onOpen={isModalOpen}
+        onClose={closeModal}
+        editingEvent={editingEvent}
+      />
+    </div>
+  );
+};
+
+export default EventPage;
