@@ -11,11 +11,10 @@ module.exports = {
       pink: "#EFB4B4",
       yellow: "#FDF5B8",
       gray: "#C6C6C0",
+      "placeholder-gray": "#a9a9a9",
       black: "#1E1E1E",
       blue: "#6E6F84",
       lightblue: "#D9D9D9",
-      
-      
     },
   },
   plugins: [],
