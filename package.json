@@ -7,7 +7,8 @@
     "start-web": "concurrently \"npm run start --prefix client\" \"npm run start --prefix server\"",
     "client": "npm start --prefix client",
     "server": "npm start --prefix server",
-    "postinstall": "cd server && npm install && cd ../client && npm install"
+    "postinstall": "cd server && npm install && cd ../client && npm install",
+    "clean-install": "rimraf node_modules client/node_modules server/node_modules && npm install"
   },
   "keywords": [],
   "author": "",
@@ -18,6 +19,7 @@
     "express": "^4.21.0"
   },
   "devDependencies": {
-    "cross-env": "^7.0.3"
+    "cross-env": "^7.0.3",
+    "rimraf": "^6.0.1"
   }
 }
