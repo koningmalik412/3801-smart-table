@@ -4,6 +4,8 @@ import Calendar from "react-calendar";
 import moment from "moment";
 import { CaretLeft, CaretRight } from "@phosphor-icons/react";
 import malikdp from "../../assets/images/malikdp.jpeg";
+import "react-calendar/dist/Calendar.css";
+import "./calendar.css";
 
 const CalendarPage = () => {
   const [date, setDate] = useState(new Date());
@@ -23,12 +25,12 @@ const CalendarPage = () => {
       <div className="bg-brown w-[1500px] -top-[300px] -left-[100px] h-[1800px] rounded-r-full absolute"></div>
       <div className="px-[100px] pt-[150px] w-full h-screen">
         <div className="w-full h-[1000px] relative mb-[50px] flex flex-row">
-          <div className="w-[700px] bg-base mr-[60px] my-auto rounded-xl">
-            <Calendar 
-              onChange={onChange} 
-              value={date} 
-              className="text-4xl" 
-              style={{ width: '100%', borderRadius: '3rem'}} 
+          <div className="w-[500px]  mr-[60px] my-auto rounded-2xl">
+            <Calendar
+              onChange={onChange}
+              value={date}
+              className="text-4xl rounded-2xl"
+              style={{ width: "100%", borderRadius: "3rem" }}
             />
           </div>
           <div className="h-full flex flex-col border-4 border-darkbrown rounded-3xl grow bg-base bg-opacity-70 overflow-hidden">
@@ -53,7 +55,9 @@ const CalendarPage = () => {
                 </div>
                 <Link to="/" className="relative -top-1">
                   <div className="bg-pink rounded-full w-[250px] h-[70px] flex justify-center shadow-3xl absolute z-10">
-                    <h6 className="text-3xl my-auto font-semibold text-brown">Add an event</h6>
+                    <h6 className="text-3xl my-auto font-semibold text-brown">
+                      Add an event
+                    </h6>
                   </div>
                   <div className="bg-black rounded-full w-[250px] h-[70px] flex justify-center shadow-3xl relative z-0 top-1 left-1"></div>
                 </Link>
@@ -62,7 +66,10 @@ const CalendarPage = () => {
             <div className="flex-1">
               <div className="grid grid-cols-7 grid-rows-5 w-full h-full">
                 {septDays.map((i) => (
-                  <div className="border-b border-r border-brown py-4 px-6 text-2xl" key={i}>
+                  <div
+                    className="border-b border-r border-brown py-4 px-6 text-2xl"
+                    key={i}
+                  >
                     {i}
                   </div>
                 ))}
@@ -94,7 +101,6 @@ const CalendarPage = () => {
             />
           </div>
         </div>
-
       </div>
     </div>
   );
