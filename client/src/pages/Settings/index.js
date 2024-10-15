@@ -129,9 +129,7 @@ const Settings = () => {
         </div>
 
         {/* Added Terms and Services Button */}
-        <button
-          className="bg-blue-500 hover:bg-blue-700 text-black font-bold py-4 px-8 rounded text-2xl mt-6"
-        >
+        <button className="bg-blue-500 hover:bg-blue-700 text-black font-bold py-4 px-8 rounded text-2xl mt-6">
           Terms and Services
         </button>
       </div>
