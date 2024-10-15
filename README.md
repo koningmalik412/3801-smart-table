@@ -1,5 +1,10 @@
 How to run
 
-1. Run 'npm install' to install dependencies
-2. Type 'npm run electron:serve' in terminal to start desktop app
-3. Type 'npm start' in terminal to run app on web browser
+1. Make sure to install all packages: ```npm install```
+
+2. To run on desktop app: ```npm start```
+
+3. To run on web: ```npm run start-web```
+
+
+If it fails to run, try ```npm run clean-install``` and try to run again.
