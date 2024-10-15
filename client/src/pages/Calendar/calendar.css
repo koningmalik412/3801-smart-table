@@ -1,0 +1,44 @@
+.react-calendar {
+    @apply w-full border-4 border-darkbrown bg-opacity-85 bg-base p-3 rounded-2xl;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.react-calendar__navigation {
+    @apply my-2 font-bold;
+    font-family: "Pathway Gothic One", sans-serif;
+}
+
+.react-calendar__month-view__weekdays__weekday {
+    @apply text-lg no-underline;
+}
+
+.react-calendar__month-view__days__day--weekend {
+    @apply text-black;
+}
+
+.react-calendar__tile--now {
+    @apply bg-pink text-white;
+}
+
+.react-calendar__tile {
+    @apply rounded-2xl;
+}
+
+.react-calendar__month-view__days__day--neighboringMonth,
+.react-calendar__decade-view__years__year--neighboringDecade,
+.react-calendar__century-view__decades__decade--neighboringCentury {
+    @apply text-gray;
+}
+
+.react-calendar__tile--hasActive,
+.react-calendar__tile--active,
+.react-calendar__tile--active:enabled:hover,
+.react-calendar__tile--active:enabled:focus {
+    @apply bg-blue text-white;
+}
+
+.react-calendar__year-view .react-calendar__tile,
+.react-calendar__decade-view .react-calendar__tile,
+.react-calendar__century-view .react-calendar__tile {
+    @apply text-xl font-bold;
+}
