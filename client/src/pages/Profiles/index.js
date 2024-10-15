@@ -28,7 +28,7 @@ const Modal = ({ onOpen, onClose, editingProfile }) => {
       // Edit mode
       setName(editingProfile.name);
       setRole(editingProfile.role);
-      setDob(Date.parse(editingProfile.dob));
+      setDob(new Date(editingProfile.dob));
       setFullName(editingProfile.fullName);
       setImage(editingProfile.image);
     } else {
@@ -43,7 +43,9 @@ const Modal = ({ onOpen, onClose, editingProfile }) => {
 
   const DateInputBar = forwardRef(({ value, onClick, className }, ref) => (
     <div className={className} onClick={onClick} ref={ref}>
-      {value || <p className="text-placeholder-gray">Date of Birth</p>}
+      {dob?.toISOString().slice(0, 10) || (
+        <p className="text-placeholder-gray">Date of Birth</p>
+      )}
     </div>
   ));
 
