@@ -17,7 +17,7 @@ exports.getEventById = (id) => {
 
 exports.createEvent = (event) => {
   const sql =
-    "INSERT INTO Events (title, description, isAllDay, startTime, endTime, location, isClash) VALUES (?, ?, ?, ?, ?)";
+    "INSERT INTO Events (title, description, isAllDay, startTime, endTime, location, isClash) VALUES (?, ?, ?, ?, ?, ?, ?)";
   let stmt = db.prepare(sql);
   let result = stmt.run(
     event.title,
