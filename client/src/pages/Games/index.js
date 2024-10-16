@@ -1,18 +1,17 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 import chessboard from "../../assets/images/chess-board.jpeg";
 import snakes from "../../assets/images/snakes-and-ladders.png";
 import Chess from "../Games/chessboard.js";
-import Snakes from "../Games/snakesandladders.js";
+import Snakes from "../Games/snakes.js";
 
 const EnlargedChessboard = ({ onClose }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50">
-      <div className="relative">
-        <Chess />
+      <div className="relative w-full h-full flex justify-center items-center">
+        <Chess className="max-w-full max-h-full" />
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 bg-white text-black px-4 py-2 rounded-full"
+          className="absolute top-4 right-4 bg-brown text-white px-6 py-3 rounded-full text-3xl"
         >
           Close
         </button>
@@ -24,15 +23,11 @@ const EnlargedChessboard = ({ onClose }) => {
 const EnlargedSnakesAndLadders = ({ onClose }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50">
-      <div className="relative">
-        <img
-          src={snakes}
-          alt="Enlarged Snakes and Ladders Board"
-          className="max-w-full max-h-[90vh] object-contain"
-        />
+      <div className="relative w-full h-full flex justify-center items-center">
+      <Snakes className="max-w-full max-h-full" />
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 bg-white text-black px-4 py-2 rounded-full"
+          className="absolute top-4 right-4 bg-brown text-white px-6 py-3 rounded-full text-3xl"
         >
           Close
         </button>
