@@ -304,7 +304,7 @@ const Community = () => {
 
                 {event.isAllDay === 1 ? (
                     <p style={{ fontSize: `${event.fontSize * 0.5}px` }}>
-                    {event.startTime.split(" ")[0]} {/* This extracts the 'DD/MM/YYYY' part */}
+                    {event.startTime?.slice(0, 10)} 
                     </p>
                 ) : (
                     <>
