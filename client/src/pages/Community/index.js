@@ -10,12 +10,84 @@ const calculateFontSize = (boxSize) => {
   return fontSize;
 };
 
+const EventDetailsModal = ({ event, onClose, onEdit, onDelete }) => {
+  return (
+    <div 
+      className="fixed inset-0 flex items-center justify-center z-20 bg-black bg-opacity-50"
+      onClick={onClose} 
+    >
+      <div 
+        style={{ height: '1100px' }}
+        className="bg-base rounded-xl p-12 shadow-lg max-h-2xl max-w-6xl w-full" 
+        onClick={(e) => e.stopPropagation()} 
+      > 
+        <h2 className="text-9xl font-semibold"> 
+          {event.title}
+        </h2>
+        <p className="mt-4 text-4xl">{event.description}</p>
+        <p className="mt-4 text-4xl">
+          <strong>Location:</strong> {event.location}
+        </p>
+        <p className="mt-4 text-4xl">
+          <strong>Start Time:</strong> {event.startTime}
+        </p>
+        <p className="mt-4 text-4xl">
+          <strong>End Time:</strong> {event.endTime}
+        </p>
+        <div className="mt-8 flex justify-between">
+          <button 
+            onClick={() => onEdit(event)} 
+            className="px-6 py-2 bg-blue text-white rounded-lg"
+          >
+            Edit
+          </button>
+          <button 
+            onClick={() => onDelete(event.id)} 
+            className="px-6 py-2 bg-blue text-white rounded-lg"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+
 const Community = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [events, setEvents] = useState([]);
   const [previousColor, setPreviousColor] = useState(null);
   const [draggingIndex, setDraggingIndex] = useState(null);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [clickTimer, setClickTimer] = useState(null);
+  const clickThreshold = 200; // Time threshold in milliseconds to distinguish click vs. drag
+
+  const handleEditEvent = async (event) => {
+    // Here you can implement your logic to open a modal for editing the event
+    // Similar to how you did with profiles.
+    // For simplicity, let's just log the event for now.
+    console.log("Edit event:", event);
+  };
+
+  const handleDeleteEvent = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:3001/api/events/${id}`, {
+        method: "DELETE",
+      });
+  
+      if (response.ok) {
+        setEvents(events.filter((event) => event.id !== id));
+        setSelectedEvent(null); // Close the modal after deleting the event
+      } else {
+        console.error("Failed to delete event from database");
+      }
+    } catch (error) {
+      console.error("Failed to delete event:", error);
+    }
+  };
+  
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -135,10 +207,19 @@ const Community = () => {
       x: e.clientX - e.currentTarget.getBoundingClientRect().left,
       y: e.clientY - e.currentTarget.getBoundingClientRect().top,
     });
+  
+    // Start the click timer
+    const timer = setTimeout(() => {
+      setClickTimer(null); // Reset the timer
+    }, clickThreshold);
+    
+    setClickTimer(timer);
   };
 
   const handleMouseMove = (e) => {
     if (draggingIndex !== null) {
+      clearTimeout(clickTimer);
+      setClickTimer(null);
       const boardWidth = 3000;
       const boardHeight = 1100;
       const boxSize = calculateBoxSize();
@@ -165,6 +246,13 @@ const Community = () => {
   const handleMouseUp = () => {
     setDraggingIndex(null);
   };
+
+  const handleClick = (event) => {
+    if (clickTimer) {
+      setSelectedEvent(event); // Only set the selected event if it was a quick click
+    }
+  };
+  
 
   const boxSize = calculateBoxSize();
 
@@ -202,6 +290,7 @@ const Community = () => {
                   top: event.position?.y || 0, 
                 }}
                 onMouseDown={(e) => handleMouseDown(e, index)}
+                onClick={() => handleClick(event)}
               >
                 <h2 className="font-semibold" style={{ fontSize: `${event.fontSize}px` }}>
                     {event.title}
@@ -229,6 +318,12 @@ const Community = () => {
       {/* Background div */}
       <div className="absolute bottom-0 left-0 w-full h-[1050px] bg-brown z-0"></div>
       <AddEvent isOpen={isPopupOpen} onClose={handleClosePopup} onAddEvent={handleAddEvent} />
+      {selectedEvent && (
+          <EventDetailsModal event={selectedEvent} onClose={() => setSelectedEvent(null)} 
+          onEdit={handleEditEvent} 
+          onDelete={handleDeleteEvent} 
+          />
+        )}
     </>
   );
 };
