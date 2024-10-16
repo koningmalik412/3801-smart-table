@@ -1,14 +1,16 @@
 import React, { useState, useRef, useEffect } from 'react';
+import DatePicker from 'react-datepicker';
+import "react-datepicker/dist/react-datepicker.css";
 
-const AddEvent = ({ isOpen, onClose, onAddEvent }) => {
-  const [title, setTitle] = useState('');
-  const [location, setLocation] = useState('');
-  const [description, setDescription] = useState('');
-  const [isAllDay, setIsAllDay] = useState(0);  // Default to 0
-  const [startTime, setStartTime] = useState('');
-  const [endTime, setEndTime] = useState('');
-  const [isClash, setIsClash] = useState(0);  // Default to 0
-
+const AddEvent = ({ isOpen, onClose, onAddEvent, editingEvent }) => {
+  const [title, setTitle] = useState(editingEvent ? editingEvent.title : '');
+  const [location, setLocation] = useState(editingEvent ? editingEvent.location : '');
+  const [description, setDescription] = useState(editingEvent ? editingEvent.description : '');
+  const [isAllDay, setIsAllDay] = useState(editingEvent ? editingEvent.isAllDay : 0);
+  const [startTime, setStartTime] = useState(editingEvent ? editingEvent.startTime : '');
+  const [endTime, setEndTime] = useState(editingEvent ? editingEvent.endTime : '');
+  const [isClash, setIsClash] = useState(editingEvent ? editingEvent.isClash : 0);
+  
   const popupRef = useRef(null);
 
   useEffect(() => {
@@ -26,21 +28,38 @@ const AddEvent = ({ isOpen, onClose, onAddEvent }) => {
     };
   }, [isOpen, onClose]);
 
+  useEffect(() => {
+    if (editingEvent) {
+      setTitle(editingEvent.title);
+      setLocation(editingEvent.location);
+      setDescription(editingEvent.description);
+      setIsAllDay(editingEvent.isAllDay);
+      setStartTime(editingEvent.startTime);
+      setEndTime(editingEvent.endTime);
+      setIsClash(editingEvent.isClash);
+    }
+  }, [editingEvent]);
+
   if (!isOpen) return null;
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (endTime && startTime && endTime <= startTime) {
+      alert("End time must be later than start time.");
+      return;
+    }
+
     const newEvent = {
       title,
       location,
       description,
-      isAllDay,
+      isAllDay: isAllDay ? 1 : 0,
       startTime,
       endTime,
-      isClash,
+      isClash: isClash ? 1 : 0,
     };
 
-    onAddEvent(newEvent);
+    onAddEvent(newEvent, editingEvent ? editingEvent.id : null); // Pass event ID for update
     resetForm();
     onClose();
   };
@@ -49,102 +68,89 @@ const AddEvent = ({ isOpen, onClose, onAddEvent }) => {
     setTitle('');
     setLocation('');
     setDescription('');
-    setIsAllDay(0);  
-    setStartTime('');
-    setEndTime('');
+    setIsAllDay(0);
+    setStartTime(null);
+    setEndTime(null);
     setIsClash(0);
   };
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-      <div
-        ref={popupRef}
-        className="relative p-6 w-full max-w-md bg-base rounded-2xl shadow-xl"
-      >
-        <div className="flex justify-between items-center pb-4 border-b">
-          <h3 className="text-2xl font-semibold text-brown">Add Event</h3>
-          <button
-            onClick={onClose}
-            className="text-white bg-blue rounded-lg text-2xl p-1.5 px-3 ml-auto"
-          >
-            x
-          </button>
-        </div>
-
-        <form onSubmit={handleSubmit} className="space-y-4 mt-4">
-          <div>
+      <div className="bg-white rounded-lg shadow-lg p-8 max-w-xl w-full" ref={popupRef}>
+        <h2 className="text-3xl mb-4">{editingEvent ? "Edit Event" : "Add Event"}</h2>
+        <form onSubmit={handleSubmit}>
+          <div className="mb-4">
+            <label className="block text-lg font-semibold mb-2">Title</label>
             <input
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="Event Title"
-              className="mt-1 block w-full border-gray-300 rounded-xl shadow-sm text-lg py-4 px-4 bg-lightblue"
+              className="w-full p-2 border border-gray-300 rounded"
               required
             />
           </div>
-          <div>
+
+          <div className="mb-4">
+            <label className="block text-lg font-semibold mb-2">Location</label>
             <input
               type="text"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
-              placeholder="Location"
-              className="mt-1 block w-full border-gray-300 rounded-xl shadow-sm text-lg py-4 px-4 bg-lightblue"
+              className="w-full p-2 border border-gray-300 rounded"
               required
             />
           </div>
-          <div>
+
+          <div className="mb-4">
+            <label className="block text-lg font-semibold mb-2">Description</label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Description"
+              className="w-full p-2 border border-gray-300 rounded"
               rows="4"
-              className="mt-1 block w-full border-gray-300 rounded-xl shadow-sm bg-lightblue py-4 px-4"
             />
           </div>
-          <div className="flex items-center">
-            <input
-              type="checkbox"
-              checked={isAllDay === 1}
-              onChange={(e) => setIsAllDay(e.target.checked ? 1 : 0)}  // Convert to 0 or 1
-              className="mr-2"
-            />
-            <label>All Day Event</label>
-          </div>
-          <div>
-            <input
-              type="text"
-              value={startTime}
-              onChange={(e) => setStartTime(e.target.value)}
-              placeholder="Start Time"
-              className="mt-1 block w-full border-gray-300 rounded-xl shadow-sm bg-lightblue py-4 px-4"
-              required
+
+          <div className="mb-4">
+            <label className="block text-lg font-semibold mb-2">Start Time</label>
+            <DatePicker
+              selected={startTime ? new Date(startTime) : null}
+              onChange={(date) => setStartTime(date)}
+              showTimeSelect
+              dateFormat="Pp"
+              className="w-full p-2 border border-gray-300 rounded"
             />
           </div>
-          <div>
-            <input
-              type="text"
-              value={endTime}
-              onChange={(e) => setEndTime(e.target.value)}
-              placeholder="End Time"
-              className="mt-1 block w-full border-gray-300 rounded-xl shadow-sm bg-lightblue py-4 px-4"
-              required
+
+          <div className="mb-4">
+            <label className="block text-lg font-semibold mb-2">End Time</label>
+            <DatePicker
+              selected={endTime ? new Date(endTime) : null}
+              onChange={(date) => setEndTime(date)}
+              showTimeSelect
+              dateFormat="Pp"
+              className="w-full p-2 border border-gray-300 rounded"
             />
           </div>
-          <div className="flex items-center">
-            <input
-              type="checkbox"
-              checked={isClash === 1}
-              onChange={(e) => setIsClash(e.target.checked ? 1 : 0)}  // Convert to 0 or 1
-              className="mr-2"
-            />
-            <label>Allow Event Clashes</label>
+
+          <div className="mb-4">
+            <label className="block text-lg font-semibold mb-2">
+              <input
+                type="checkbox"
+                checked={isAllDay}
+                onChange={(e) => setIsAllDay(e.target.checked)}
+                className="mr-2"
+              />
+              All Day
+            </label>
           </div>
-          <div className="flex justify-end mt-6">
-            <button
-              type="submit"
-              className="px-4 py-2 bg-blue text-base rounded-lg text-white"
-            >
-              Add Event
+
+          <div className="flex justify-between">
+            <button type="button" onClick={onClose} className="px-4 py-2 bg-gray text-white rounded">
+              Cancel
+            </button>
+            <button type="submit" className="px-4 py-2 bg-blue text-white rounded">
+               {editingEvent ? "Save Changes" : "Create Event"} {/* Clear label */}
             </button>
           </div>
         </form>
