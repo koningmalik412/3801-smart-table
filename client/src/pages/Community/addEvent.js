@@ -79,85 +79,90 @@ const AddEvent = ({ isOpen, onClose, onAddEvent, editingEvent, onDelete }) => {
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-      <div className="bg-white rounded-lg shadow-lg p-8 max-w-xl w-full" ref={popupRef}>
-        <h2 className="text-3xl mb-4">{editingEvent ? "Edit Event" : "Add Event"}</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label className="block text-lg font-semibold mb-2">Title</label>
+    <div className="fixed inset-0 z-50 flex items-center justify-center w-full h-screen bg-black bg-opacity-50">
+      <div className="relative p-6 w-full max-w-3xl bg-base rounded-2xl shadow-xl" ref={popupRef}>
+        <div className="flex justify-between items-center pb-4 border-b">
+          <h6 className="text-5xl my-auto font-semibold text-brown">
+            {editingEvent ? "Edit Event" : "Add Event"}
+          </h6>
+          <button
+            onClick={onClose}
+            className="text-white bg-blue rounded-lg text-2xl p-1.5 px-3 ml-auto"
+          >
+            x
+          </button>
+        </div>
+
+        <div className="mt-4">
+          <form onSubmit={handleSubmit}>
             <input
               type="text"
+              placeholder="Title"
+              className="mt-4 w-full p-4 rounded-xl bg-lightblue text-3xl placeholder-gray"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded"
               required
             />
-          </div>
-
-          <div className="mb-4">
-            <label className="block text-lg font-semibold mb-2">Location</label>
             <input
               type="text"
+              placeholder="Location"
+              className="mt-4 w-full p-4 rounded-xl bg-lightblue text-3xl bg-gray"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded"
               required
             />
-          </div>
-
-          <div className="mb-4">
-            <label className="block text-lg font-semibold mb-2">Description</label>
             <textarea
+              placeholder="Description"
+              className="mt-4 w-full p-4 rounded-xl bg-lightblue text-3xl placeholder-gray"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded"
               rows="4"
             />
-          </div>
 
-          <div className="mb-4">
-            <label className="block text-lg font-semibold mb-2">Start Time</label>
+            <label className="block text-lg font-semibold mb-2 mt-4">Start Time</label>
             <DatePicker
               selected={startTime ? new Date(startTime) : null}
               onChange={(date) => setStartTime(date)}
               showTimeSelect
               dateFormat="Pp"
-              className="w-full p-2 border border-gray-300 rounded"
+              className="mt-2 w-full p-4 rounded-xl bg-lightblue text-3xl placeholder-gray-400"
             />
-          </div>
-
-          <div className="mb-4">
-            <label className="block text-lg font-semibold mb-2">End Time</label>
+            
+            <label className="block text-lg font-semibold mb-2 mt-4">End Time</label>
             <DatePicker
               selected={endTime ? new Date(endTime) : null}
               onChange={(date) => setEndTime(date)}
               showTimeSelect
               dateFormat="Pp"
-              className="w-full p-2 border border-gray-300 rounded"
+              className="mt-2 w-full p-4 rounded-xl bg-lightblue text-3xl placeholder-gray-400"
             />
-          </div>
-
-          <div className="mb-4">
-            <label className="block text-lg font-semibold mb-2">
+            
+            <div className="mb-4 mt-4 flex items-center">
               <input
                 type="checkbox"
                 checked={isAllDay}
                 onChange={(e) => setIsAllDay(e.target.checked)}
                 className="mr-2"
               />
-              All Day
-            </label>
-          </div>
+              <label className="text-lg font-semibold">All Day</label>
+            </div>
 
-          <div className="flex justify-between">
-            <button type="button" onClick={onClose} className="px-4 py-2 bg-gray text-white rounded">
-              Cancel
-            </button>
-            <button type="submit" className="px-4 py-2 bg-blue text-white rounded">
-               {editingEvent ? "Save Changes" : "Create Event"} {/* Clear label */}
-            </button>
-          </div>
-        </form>
+            <div className="mt-6 flex justify-center">
+              <button
+                onClick={onClose}
+                className="px-6 py-4 bg-gray text-white rounded-lg text-2xl mr-4"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="px-6 py-4 bg-blue text-white rounded-lg text-2xl"
+              >
+                {editingEvent ? "Save Changes" : "Create Event"}
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );

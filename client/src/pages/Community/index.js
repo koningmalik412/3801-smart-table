@@ -22,11 +22,11 @@ const EventDetailsModal = ({ event, onClose, onEdit, onDelete }) => {
         className="bg-base rounded-xl p-12 shadow-lg max-h-2xl max-w-6xl w-full flex flex-col justify-between" 
         onClick={(e) => e.stopPropagation()} 
       > 
-        <div>
+        <div className="text-brown">
           <h2 className="mx-8 mt-8 text-9xl font-semibold"> 
             {event.title}
           </h2>
-          <p className="mx-8 mt-20 text-4xl">
+          <p className="mx-8 mt-20 text-4xl ">
             <strong>Location:</strong> {event.location}
           </p>
           <p className="mx-8 mt-8 text-4xl">
@@ -133,7 +133,7 @@ const Community = () => {
     const minSize = 100;
     const maxSize = 800;
     const numEvents = events.length;
-    const maxEvents = 12;
+    const maxEvents = 16;
 
     const sizeFactor = Math.max(1, maxEvents - numEvents);
     const size = Math.max(minSize, Math.min(maxSize, (maxSize / maxEvents) * sizeFactor));
@@ -174,38 +174,38 @@ const Community = () => {
   };
 
   const handleAddEvent = async (event) => {
-    const boxSize = calculateBoxSize();
-    const position = calculatePosition(boxSize);
-    const colors = ["bg-pink", "bg-blue", "bg-lightblue"];
+  const boxSize = calculateBoxSize();
+  const position = calculatePosition(boxSize);
+  const colors = ["bg-pink", "bg-blue", "bg-lightblue"];
+  const availableColors = colors.filter((color) => color !== previousColor);
+  const randomColor = availableColors[Math.floor(Math.random() * availableColors.length)];
 
-    const availableColors = colors.filter((color) => color !== previousColor);
-    const randomColor = availableColors[Math.floor(Math.random() * availableColors.length)];
-
-    const newEvent = {
-      ...event,
-      position,
-      color: randomColor,
-      fontSize: calculateFontSize(boxSize), // Calculate font size for the new event
-    };
-
-    // Send new event to the database
-    try {
-      const response = await fetch("http://localhost:3001/api/events", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newEvent),
-      });
-      const createdEvent = await response.json();
-      setEvents([...events, createdEvent]);
-    } catch (error) {
-      console.error("Error adding event:", error);
-    }
-
-    setPreviousColor(randomColor);
-    handleClosePopup();
+  const newEvent = {
+    ...event,
+    position,
+    color: randomColor,
+    fontSize: calculateFontSize(boxSize), // Calculate font size for the new event only
   };
+
+  // Send new event to the database
+  try {
+    const response = await fetch("http://localhost:3001/api/events", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newEvent),
+    });
+    const createdEvent = await response.json();
+    setEvents((prevEvents) => [...prevEvents, createdEvent]);
+  } catch (error) {
+    console.error("Error adding event:", error);
+  }
+
+  setPreviousColor(randomColor);
+  handleClosePopup();
+};
+
 
   const handleMouseDown = (e, index) => {
     setDraggingIndex(index);
@@ -298,7 +298,7 @@ const Community = () => {
                 onMouseDown={(e) => handleMouseDown(e, index)}
                 onClick={() => handleClick(event)}
               >
-                <h2 className="font-semibold" style={{ fontSize: `${event.fontSize}px` }}>
+                <h2 className="font-semibold mb-4" style={{ fontSize: `${event.fontSize}px` }}>
                     {event.title}
                 </h2>
 
