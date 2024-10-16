@@ -30,11 +30,12 @@ const EventDetailsModal = ({ event, onClose, onEdit, onDelete }) => {
             <strong>Location:</strong> {event.location}
           </p>
           <p className="mx-8 mt-8 text-4xl">
-            <strong>Start Time:</strong> {event.startTime}
+            <strong>Start Time:</strong> {event.startTime?.slice(0, 10)} {event.startTime?.slice(11, 16)}
           </p>
           <p className="mx-8 mt-4 text-4xl">
-            <strong>End Time:</strong> {event.endTime}
+            <strong>End Time:</strong> {event.endTime?.slice(0, 10)} {event.endTime?.slice(11, 16)}
           </p>
+
           <p className="mx-8 mt-20 text-4xl">{event.description}</p>
         </div>
         <div className="flex justify-center space-x-4 mb-12"> {/* Increased margin here */}
@@ -307,8 +308,8 @@ const Community = () => {
                     </p>
                 ) : (
                     <>
-                    <p style={{ fontSize: `${event.fontSize * 0.5}px` }}>{event.startTime}</p>
-                    <p style={{ fontSize: `${event.fontSize * 0.5}px` }}>{event.endTime}</p>
+                    <p style={{ fontSize: `${event.fontSize * 0.5}px` }}>{event.startTime?.slice(0, 10)} {event.startTime?.slice(11, 16)}</p>
+                    <p style={{ fontSize: `${event.fontSize * 0.5}px` }}>{event.endTime?.slice(0, 10)} {event.endTime?.slice(11, 16)}</p>
                     </>
                 )}
 
