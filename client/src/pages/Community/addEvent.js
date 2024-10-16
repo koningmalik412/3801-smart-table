@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 
-const AddEvent = ({ isOpen, onClose, onAddEvent, editingEvent }) => {
+const AddEvent = ({ isOpen, onClose, onAddEvent, editingEvent, onDelete }) => {
   const [title, setTitle] = useState(editingEvent ? editingEvent.title : '');
   const [location, setLocation] = useState(editingEvent ? editingEvent.location : '');
   const [description, setDescription] = useState(editingEvent ? editingEvent.description : '');
@@ -58,6 +58,10 @@ const AddEvent = ({ isOpen, onClose, onAddEvent, editingEvent }) => {
       endTime,
       isClash: isClash ? 1 : 0,
     };
+
+    if (editingEvent) {
+      onDelete(editingEvent.id); // Delete the existing event
+    }
 
     onAddEvent(newEvent, editingEvent ? editingEvent.id : null); // Pass event ID for update
     resetForm();
