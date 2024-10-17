@@ -1,21 +1,17 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 import chessboard from "../../assets/images/chess-board.jpeg";
 import snakes from "../../assets/images/snakes-and-ladders.png";
 import Chess from "../Games/chessboard.js";
-import Snakes from "../Games/snakesandladders.js";
+import Snakes from "../Games/snakes.js";
 
 const EnlargedChessboard = ({ onClose }) => {
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50">
-      <div className="relative">
+    <div
+      onClick={onClose}
+      className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50"
+    >
+      <div className="relative w-full h-full py-36 flex justify-center items-center">
         <Chess />
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 bg-white text-black px-4 py-2 rounded-full"
-        >
-          Close
-        </button>
       </div>
     </div>
   );
@@ -23,19 +19,12 @@ const EnlargedChessboard = ({ onClose }) => {
 
 const EnlargedSnakesAndLadders = ({ onClose }) => {
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50">
-      <div className="relative">
-        <img
-          src={snakes}
-          alt="Enlarged Snakes and Ladders Board"
-          className="max-w-full max-h-[90vh] object-contain"
-        />
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 bg-white text-black px-4 py-2 rounded-full"
-        >
-          Close
-        </button>
+    <div
+      onClick={onClose}
+      className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50"
+    >
+      <div className="relative w-full h-full py-36 flex justify-center items-center">
+        <Snakes className="max-w-full max-h-full" />
       </div>
     </div>
   );
@@ -70,9 +59,11 @@ const Games = () => {
             className="h-full bg-pink rounded-[30px] border-[3px] border-brown overflow-hidden"
             onClick={handleChessboardClick}
           >
-            <div className="h-[500px] cursor-pointer">
-              <Chess />
-            </div>
+            <img
+              src={chessboard}
+              alt="Snake and Ladder Board"
+              className="w-full h-[500px] object-cover cursor-pointer"
+            />
             <div className="p-4 text-center">
               <h2 className="text-9xl font-bold mb-2 text-darkbrown pt-20">
                 Chess
