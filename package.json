@@ -1,26 +1,69 @@
 {
   "name": "3801-smart-table",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "client/src/main.js",
   "scripts": {
     "start": "concurrently \"npm run electron:serve --prefix client\" \"npm run start --prefix server\"",
     "start-web": "concurrently \"npm run start --prefix client\" \"npm run start --prefix server\"",
     "client": "npm start --prefix client",
     "server": "npm start --prefix server",
     "postinstall": "cd server && npm install && cd ../client && npm install",
-    "clean-install": "rimraf node_modules client/node_modules server/node_modules && npm install"
+    "clean-install": "rimraf node_modules client/node_modules server/node_modules && npm install",
+    "build-client": "npm run build --prefix client",
+    "electron:serve": "electron .",
+    "dist": "npm run build-client && electron-builder --linux"
   },
   "keywords": [],
-  "author": "",
+  "author": "Malik Zaidan <malikismail.0402@gmail.com>",
   "license": "ISC",
-  "description": "",
+  "description": "A smart coffee table application",
   "dependencies": {
+    "@fullcalendar/core": "^6.1.15",
+    "@fullcalendar/daygrid": "^6.1.15",
+    "@fullcalendar/interaction": "^6.1.15",
+    "@fullcalendar/react": "^6.1.15",
+    "@fullcalendar/timegrid": "^6.1.15",
     "concurrently": "^9.0.1",
     "express": "^4.21.0",
     "react-datepicker": "^7.4.0"
   },
   "devDependencies": {
     "cross-env": "^7.0.3",
+    "electron": "^33.0.1",
+    "electron-builder": "^25.1.8",
     "rimraf": "^6.0.1"
+  },
+  "build": {
+    "appId": "com.Coffee.table",
+    "productName": "Coffee Table",
+    "files": [
+      "client/build/**/*",
+      "server/**/*",
+      "client/src/main.js"
+    ],
+    "directories": {
+      "buildResources": "assets"
+    },
+    "linux": {
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": [
+            "armv7l",
+            "arm64",
+            "x64"
+          ]
+        },
+        {
+          "target": "deb",
+          "arch": [
+            "armv7l",
+            "arm64",
+            "x64"
+          ]
+        }
+      ],
+      "category": "Utility"
+    }
   }
 }
