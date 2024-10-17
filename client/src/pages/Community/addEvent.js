@@ -1,11 +1,16 @@
 import React, { useState, useRef, useEffect } from 'react';
+import DatePicker from 'react-datepicker';
+import "react-datepicker/dist/react-datepicker.css";
 
-const AddEvent = ({ isOpen, onClose, onAddEvent }) => {
-  const [title, setTitle] = useState('');
-  const [date, setDate] = useState('');
-  const [time, setTime] = useState('');
-  const [description, setDescription] = useState('');
-
+const AddEvent = ({ isOpen, onClose, onAddEvent, editingEvent, onDelete }) => {
+  const [title, setTitle] = useState(editingEvent ? editingEvent.title : '');
+  const [location, setLocation] = useState(editingEvent ? editingEvent.location : '');
+  const [description, setDescription] = useState(editingEvent ? editingEvent.description : '');
+  const [isAllDay, setIsAllDay] = useState(editingEvent ? editingEvent.isAllDay : 0);
+  const [startTime, setStartTime] = useState(editingEvent ? editingEvent.startTime : '');
+  const [endTime, setEndTime] = useState(editingEvent ? editingEvent.endTime : '');
+  const [isClash, setIsClash] = useState(editingEvent ? editingEvent.isClash : 0);
+  
   const popupRef = useRef(null);
 
   useEffect(() => {
@@ -23,28 +28,63 @@ const AddEvent = ({ isOpen, onClose, onAddEvent }) => {
     };
   }, [isOpen, onClose]);
 
+  useEffect(() => {
+    if (editingEvent) {
+      setTitle(editingEvent.title);
+      setLocation(editingEvent.location);
+      setDescription(editingEvent.description);
+      setIsAllDay(editingEvent.isAllDay);
+      setStartTime(editingEvent.startTime);
+      setEndTime(editingEvent.endTime);
+      setIsClash(editingEvent.isClash);
+    }
+  }, [editingEvent]);
+
   if (!isOpen) return null;
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const newEvent = { title, date, time, description };
-    onAddEvent(newEvent);
-    // Clear fields after adding event
+    if (endTime && startTime && endTime <= startTime) {
+      alert("End time must be later than start time.");
+      return;
+    }
+
+    const newEvent = {
+      title,
+      location,
+      description,
+      isAllDay: isAllDay ? 1 : 0,
+      startTime,
+      endTime,
+      isClash: isClash ? 1 : 0,
+    };
+
+    if (editingEvent) {
+      onDelete(editingEvent.id); // Delete the existing event
+    }
+
+    onAddEvent(newEvent, editingEvent ? editingEvent.id : null); // Pass event ID for update
+    resetForm();
+    onClose();
+  };
+
+  const resetForm = () => {
     setTitle('');
-    setDate('');
-    setTime('');
+    setLocation('');
     setDescription('');
-    onClose(); // Close modal after adding
+    setIsAllDay(0);
+    setStartTime(null);
+    setEndTime(null);
+    setIsClash(0);
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 ">
-      <div 
-        ref={popupRef}
-        className="relative p-6 w-full max-w-md bg-base rounded-2xl shadow-xl max-w-[800px]"
-      >
+    <div className="fixed inset-0 z-50 flex items-center justify-center w-full h-screen bg-black bg-opacity-50">
+      <div className="relative p-6 w-full max-w-3xl bg-base rounded-2xl shadow-xl" ref={popupRef}>
         <div className="flex justify-between items-center pb-4 border-b">
-          <h3 className="text-6xl font-semibold text-brown">Add Event</h3>
+          <h6 className="text-5xl my-auto font-semibold text-brown">
+            {editingEvent ? "Edit Event" : "Add Event"}
+          </h6>
           <button
             onClick={onClose}
             className="text-white bg-blue rounded-lg text-2xl p-1.5 px-3 ml-auto"
@@ -52,56 +92,77 @@ const AddEvent = ({ isOpen, onClose, onAddEvent }) => {
             x
           </button>
         </div>
-        
-        <form onSubmit={handleSubmit} className="space-y-4 mt-4">
-          <div>
+
+        <div className="mt-4">
+          <form onSubmit={handleSubmit}>
             <input
               type="text"
+              placeholder="Title"
+              className="mt-4 w-full p-4 rounded-xl bg-lightblue text-3xl placeholder-gray"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="New Event"
-              className="mt-1 block w-full border-gray-300 rounded-xl shadow-sm text-lg py-4 px-4 bg-lightblue"
               required
             />
-          </div>
-          <div>
-            <label className="block text-3xl font-medium text-brown">Date</label>
             <input
-              type="date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-              className="mt-1 block w-full border-gray-300 rounded-xl shadow-sm bg-lightblue py-4 px-4"
+              type="text"
+              placeholder="Location"
+              className="mt-4 w-full p-4 rounded-xl bg-lightblue text-3xl bg-gray"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
               required
             />
-          </div>
-          <div>
-            <label className="block text-3xl font-medium text-brown">Time</label>
-            <input
-              type="time"
-              value={time}
-              onChange={(e) => setTime(e.target.value)}
-              className="mt-1 block w-full border-gray-300 rounded-xl shadow-sm bg-lightblue py-4 px-4"
-              required
-            />
-          </div>
-          <div>
-            <label className="block text-3xl font-medium text-brown">Description</label>
             <textarea
+              placeholder="Description"
+              className="mt-4 w-full p-4 rounded-xl bg-lightblue text-3xl placeholder-gray"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows="4"
-              className="mt-1 block w-full border-gray-300 rounded-xl shadow-sm bg-lightblue py-4 px-4"
-            ></textarea>
-          </div>
-          <div className="flex justify-end mt-6">
-            <button
-              type="submit"
-              className="px-4 py-2 bg-blue text-base rounded-lg text-white"
-            >
-              Add Event
-            </button>
-          </div>
-        </form>
+            />
+
+            <label className="block text-lg font-semibold mb-2 mt-4">Start Time</label>
+            <DatePicker
+              selected={startTime ? new Date(startTime) : null}
+              onChange={(date) => setStartTime(date)}
+              showTimeSelect
+              dateFormat="Pp"
+              className="mt-2 w-full p-4 rounded-xl bg-lightblue text-3xl placeholder-gray-400"
+            />
+            
+            <label className="block text-lg font-semibold mb-2 mt-4">End Time</label>
+            <DatePicker
+              selected={endTime ? new Date(endTime) : null}
+              onChange={(date) => setEndTime(date)}
+              showTimeSelect
+              dateFormat="Pp"
+              className="mt-2 w-full p-4 rounded-xl bg-lightblue text-3xl placeholder-gray-400"
+            />
+            
+            <div className="mb-4 mt-4 flex items-center">
+              <input
+                type="checkbox"
+                checked={isAllDay}
+                onChange={(e) => setIsAllDay(e.target.checked)}
+                className="mr-2"
+              />
+              <label className="text-lg font-semibold">All Day</label>
+            </div>
+
+            <div className="mt-6 flex justify-center">
+              <button
+                onClick={onClose}
+                className="px-6 py-4 bg-gray text-white rounded-lg text-2xl mr-4"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="px-6 py-4 bg-blue text-white rounded-lg text-2xl"
+              >
+                {editingEvent ? "Save Changes" : "Create Event"}
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );
