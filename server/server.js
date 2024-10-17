@@ -46,7 +46,7 @@ app.post("/api/events", (req, res) => {
       eventId: result.lastInsertRowid,
     });
   } catch (error) {
-    res.status(500).json({ error: "Failed to create event" });
+    res.status(500).json({ error: error });
   }
 });
 

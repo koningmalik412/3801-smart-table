@@ -17,7 +17,7 @@ exports.getEventById = (id) => {
 
 exports.createEvent = (event) => {
   const sql =
-    "INSERT INTO Events (title, description, isAllDay, startTime, endTime, location, isClash) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    "INSERT INTO Events (title, description, isAllDay, startTime, endTime, location, color) VALUES (?, ?, ?, ?, ?, ?, ?)";
   let stmt = db.prepare(sql);
   let result = stmt.run(
     event.title,
@@ -26,14 +26,14 @@ exports.createEvent = (event) => {
     event.startTime,
     event.endTime,
     event.location,
-    event.isClash
+    event.color
   );
   return result;
 };
 
 exports.updateEvent = (id, event) => {
   const sql =
-    "UPDATE Events SET title = ?, description = ?, isAllDay = ?, startTime = ?, endTime = ?, location = ?, isClash = ? WHERE id = ?";
+    "UPDATE Events SET title = ?, description = ?, isAllDay = ?, startTime = ?, endTime = ?, location = , color = ? WHERE id = ?";
   let stmt = db.prepare(sql);
   let result = stmt.run(
     event.title,
@@ -42,7 +42,7 @@ exports.updateEvent = (id, event) => {
     event.startTime,
     event.endTime,
     event.location,
-    event.isClash,
+    color,
     id
   );
   return result;

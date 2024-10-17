@@ -9,7 +9,6 @@ import Settings from "./pages/Settings";
 import Standby from "./pages/Standby"; // Import Standby
 import StandbyButton from "./pages/Standby/standbyButton"; // Import StandbyButton
 import Header from "./pages/Header";
-import Footer from "./pages/Footer";
 import {
   House,
   Note,
@@ -17,7 +16,6 @@ import {
   Users,
   DotsThreeOutline,
   Checkerboard,
-  Power,
 } from "@phosphor-icons/react";
 import Community from "./pages/Community";
 import RotateButton from "./pages/Header/rotate"; // Import RotateButton
@@ -44,7 +42,8 @@ function App() {
           <Route path="/games" element={<Games />} />
           <Route path="/community" element={<Community />} />
           <Route path="/settings" element={<Settings />} />
-          <Route path="/standby" element={<Standby />} /> {/* Route for Standby */}
+          <Route path="/standby" element={<Standby />} />{" "}
+          {/* Route for Standby */}
         </Routes>
       </div>
       {/* Only show the Header and RotateButton if not on the Standby page */}
@@ -60,7 +59,9 @@ function App() {
       )}
 
       {/* Include StandbyButton */}
-      <div className="absolute top-5 right-5"> {/* Adjust position as needed */}
+      <div className="absolute top-5 right-5">
+        {" "}
+        {/* Adjust position as needed */}
         <StandbyButton />
       </div>
 

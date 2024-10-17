@@ -117,7 +117,11 @@ const Modal = ({ onOpen, onClose, editingProfile }) => {
           >
             <option value="">Select Role</option>
             {roleOptions.map((option, index) => {
-              return <option value={index + 1}>{option}</option>;
+              return (
+                <option key={index} value={index + 1}>
+                  {option}
+                </option>
+              );
             })}
           </select>
 

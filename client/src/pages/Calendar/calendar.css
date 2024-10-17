@@ -42,3 +42,28 @@
 .react-calendar__century-view .react-calendar__tile {
     @apply text-xl font-bold;
 }
+
+.fc {
+    @apply mt-5;
+}
+
+.fc .fc-button {
+    @apply bg-blue rounded-2xl border-0 text-lg px-5;
+}
+
+.fc-event {
+    @apply overflow-hidden;
+}
+
+.fc-toolbar {
+    @apply px-5;
+}
+
+.fc-toolbar .fc-toolbar-title {
+    @apply text-5xl font-bold;
+}
+
+:root {
+    --fc-today-bg-color: #D9D9D9;
+    --fc-event-text-color: #000;
+}

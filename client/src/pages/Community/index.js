@@ -6,47 +6,49 @@ const calculateFontSize = (boxSize) => {
   const maxFontSize = 80; // Maximum font size for largest box
   const scale = boxSize / 300; // Scale factor for font size based on box size (adjust based on your needs)
   const fontSize = Math.min(maxFontSize, baseFontSize * scale);
-  
+
   return fontSize;
 };
 
 const EventDetailsModal = ({ event, onClose, onEdit, onDelete }) => {
   return (
-    <div 
+    <div
       className="fixed inset-0 flex items-center justify-center z-20 bg-black bg-opacity-50"
-      onClick={onClose} 
-      style={{ zIndex: 40, position: 'fixed' }}
+      onClick={onClose}
+      style={{ zIndex: 40, position: "fixed" }}
     >
-      <div 
-        style={{ height: '1100px' }}
-        className="bg-base rounded-xl p-12 shadow-lg max-h-2xl max-w-6xl w-full flex flex-col justify-between" 
-        onClick={(e) => e.stopPropagation()} 
-      > 
+      <div
+        style={{ height: "1100px" }}
+        className="bg-base rounded-xl p-12 shadow-lg max-h-2xl max-w-6xl w-full flex flex-col justify-between"
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="text-brown">
-          <h2 className="mx-8 mt-8 text-9xl font-semibold"> 
-            {event.title}
-          </h2>
+          <h2 className="mx-8 mt-8 text-9xl font-semibold">{event.title}</h2>
           <p className="mx-8 mt-20 text-4xl ">
             <strong>Location:</strong> {event.location}
           </p>
           <p className="mx-8 mt-8 text-4xl">
-            <strong>Start Time:</strong> {event.startTime?.slice(0, 10)} {event.startTime?.slice(11, 16)}
+            <strong>Start Time:</strong> {event.startTime?.slice(0, 10)}{" "}
+            {event.startTime?.slice(11, 16)}
           </p>
           <p className="mx-8 mt-4 text-4xl">
-            <strong>End Time:</strong> {event.endTime?.slice(0, 10)} {event.endTime?.slice(11, 16)}
+            <strong>End Time:</strong> {event.endTime?.slice(0, 10)}{" "}
+            {event.endTime?.slice(11, 16)}
           </p>
 
           <p className="mx-8 mt-20 text-4xl">{event.description}</p>
         </div>
-        <div className="flex justify-center space-x-4 mb-12"> {/* Increased margin here */}
-          <button 
-            onClick={() => onEdit(event)} 
+        <div className="flex justify-center space-x-4 mb-12">
+          {" "}
+          {/* Increased margin here */}
+          <button
+            onClick={() => onEdit(event)}
             className="px-48 py-4 text-5xl bg-blue text-white rounded-lg"
           >
             Edit
           </button>
-          <button 
-            onClick={() => onDelete(event.id)} 
+          <button
+            onClick={() => onDelete(event.id)}
             className="px-44 py-4 text-5xl bg-blue text-white rounded-lg"
           >
             Delete
@@ -57,14 +59,10 @@ const EventDetailsModal = ({ event, onClose, onEdit, onDelete }) => {
   );
 };
 
-
-
-
-
 const Community = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [events, setEvents] = useState([]);
-  const [previousColor, setPreviousColor] = useState(null);
+  // const [previousColor, setPreviousColor] = useState(null);
   const [draggingIndex, setDraggingIndex] = useState(null);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [selectedEvent, setSelectedEvent] = useState(null);
@@ -82,7 +80,7 @@ const Community = () => {
       const response = await fetch(`http://localhost:3001/api/events/${id}`, {
         method: "DELETE",
       });
-  
+
       if (response.ok) {
         setEvents(events.filter((event) => event.id !== id));
         setSelectedEvent(null); // Close the modal after deleting the event
@@ -93,7 +91,6 @@ const Community = () => {
       console.error("Failed to delete event:", error);
     }
   };
-  
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -104,15 +101,10 @@ const Community = () => {
         const updatedEvents = data.map((event) => {
           const boxSize = calculateBoxSize(); // Get the box size
           const position = calculatePosition(boxSize);
-          const colors = ["bg-pink", "bg-blue", "bg-lightblue"];
-
-          const availableColors = colors.filter((color) => color !== previousColor);
-          const randomColor = availableColors[Math.floor(Math.random() * availableColors.length)];
 
           return {
             ...event,
             position,
-            color: randomColor,
             fontSize: calculateFontSize(boxSize), // Calculate font size for existing events
           };
         });
@@ -124,7 +116,7 @@ const Community = () => {
     };
 
     fetchEvents();
-  }, [previousColor]);
+  }, []);
 
   const handleOpenPopup = () => setIsPopupOpen(true);
   const handleClosePopup = () => setIsPopupOpen(false);
@@ -136,14 +128,17 @@ const Community = () => {
     const maxEvents = 16;
 
     const sizeFactor = Math.max(1, maxEvents - numEvents);
-    const size = Math.max(minSize, Math.min(maxSize, (maxSize / maxEvents) * sizeFactor));
+    const size = Math.max(
+      minSize,
+      Math.min(maxSize, (maxSize / maxEvents) * sizeFactor)
+    );
 
     return size;
   };
 
   const calculatePosition = (boxSize) => {
-    const boardWidth = 3000; 
-    const boardHeight = 1100; 
+    const boardWidth = 3000;
+    const boardHeight = 1100;
 
     const isOverlapping = (pos) => {
       return events.some((event) => {
@@ -174,38 +169,33 @@ const Community = () => {
   };
 
   const handleAddEvent = async (event) => {
-  const boxSize = calculateBoxSize();
-  const position = calculatePosition(boxSize);
-  const colors = ["bg-pink", "bg-blue", "bg-lightblue"];
-  const availableColors = colors.filter((color) => color !== previousColor);
-  const randomColor = availableColors[Math.floor(Math.random() * availableColors.length)];
+    // const boxSize = calculateBoxSize();
+    // const position = calculatePosition(boxSize);
 
-  const newEvent = {
-    ...event,
-    position,
-    color: randomColor,
-    fontSize: calculateFontSize(boxSize), // Calculate font size for the new event only
+    // const newEvent = {
+    //   ...event,
+    //   position,
+    //   fontSize: calculateFontSize(boxSize), // Calculate font size for the new event only
+    // };
+
+    // Send new event to the database
+    try {
+      await fetch("http://localhost:3001/api/events", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(event),
+      });
+
+      window.location.reload();
+    } catch (error) {
+      console.error("Error adding event:", error);
+    }
+
+    // setPreviousColor(randomColor);
+    handleClosePopup();
   };
-
-  // Send new event to the database
-  try {
-    const response = await fetch("http://localhost:3001/api/events", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newEvent),
-    });
-    const createdEvent = await response.json();
-    setEvents((prevEvents) => [...prevEvents, createdEvent]);
-  } catch (error) {
-    console.error("Error adding event:", error);
-  }
-
-  setPreviousColor(randomColor);
-  handleClosePopup();
-};
-
 
   const handleMouseDown = (e, index) => {
     setDraggingIndex(index);
@@ -213,12 +203,12 @@ const Community = () => {
       x: e.clientX - e.currentTarget.getBoundingClientRect().left,
       y: e.clientY - e.currentTarget.getBoundingClientRect().top,
     });
-  
+
     // Start the click timer
     const timer = setTimeout(() => {
       setClickTimer(null); // Reset the timer
     }, clickThreshold);
-    
+
     setClickTimer(timer);
   };
 
@@ -258,63 +248,84 @@ const Community = () => {
       setSelectedEvent(event); // Only set the selected event if it was a quick click
     }
   };
-  
 
   const boxSize = calculateBoxSize();
 
   return (
     <>
-      <div className="absolute w-full px-12 z-10" onMouseMove={handleMouseMove} onMouseUp={handleMouseUp}>
+      <div
+        className="absolute w-full px-12 z-10"
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+      >
         {/* Title */}
         <div className="block mt-12 mb-2">
           <h5 className="text-9xl text-brown">EVENT BOARD</h5>
         </div>
 
         <div className="absolute top-14 right-20">
-          <div 
-            onClick={handleOpenPopup} 
-            className="bg-pink rounded-full w-[350px] h-[70px] flex justify-center shadow-3xl absolute z-10 cursor-pointer"
+          <div
+            onClick={handleOpenPopup}
+            className="bg-pink rounded-full w-[300px] h-[70px] flex justify-center shadow-3xl absolute z-10 cursor-pointer"
           >
-            <h6 className="text-3xl my-auto font-semibold text-brown">CREATE AN EVENT</h6>
+            <h6 className="text-3xl my-auto font-semibold text-brown">
+              ADD EVENT
+            </h6>
           </div>
-          <div className="bg-black rounded-full w-[350px] h-[70px] flex justify-center shadow-3xl relative z-0 top-1 left-1"></div>
+          <div className="bg-black rounded-full w-[300px] h-[70px] flex justify-center shadow-3xl relative z-0 top-1 left-1"></div>
         </div>
 
         {/* Board */}
-        <div className="bg-base h-[1100px] w-full rounded-[30px] border-[3px] border-brown p-4 overflow-auto relative"
-         onMouseLeave={handleMouseUp}>
+        <div
+          className="bg-base h-[1100px] w-full rounded-[30px] border-[3px] border-brown p-4 overflow-auto relative"
+          onMouseLeave={handleMouseUp}
+        >
           <div className="grid grid-cols-3 gap-4">
             {events.map((event, index) => (
               <div
                 key={index}
-                className={`${event.color} p-4 rounded-lg shadow-lg`}
+                className={`p-4 rounded-lg shadow-lg`}
                 style={{
+                  backgroundColor: event.color,
                   width: `${boxSize}px`,
                   height: `${boxSize}px`,
                   position: "absolute",
-                  left: event.position?.x || 0, 
-                  top: event.position?.y || 0, 
+                  left: event.position?.x || 0,
+                  top: event.position?.y || 0,
                 }}
                 onMouseDown={(e) => handleMouseDown(e, index)}
                 onClick={() => handleClick(event)}
               >
-                <h2 className="font-semibold mb-4" style={{ fontSize: `${event.fontSize}px` }}>
-                    {event.title}
+                <h2
+                  className="font-semibold mb-4"
+                  style={{ fontSize: `${event.fontSize}px` }}
+                >
+                  {event.title}
                 </h2>
 
                 {event.isAllDay === 1 ? (
-                    <p style={{ fontSize: `${event.fontSize * 0.5}px` }}>
-                    {event.startTime?.slice(0, 10)} 
-                    </p>
+                  <p style={{ fontSize: `${event.fontSize * 0.5}px` }}>
+                    {event.startTime?.slice(0, 10)}
+                  </p>
                 ) : (
-                    <>
-                    <p style={{ fontSize: `${event.fontSize * 0.5}px` }}>{event.startTime?.slice(0, 10)} {event.startTime?.slice(11, 16)}</p>
-                    <p style={{ fontSize: `${event.fontSize * 0.5}px` }}>{event.endTime?.slice(0, 10)} {event.endTime?.slice(11, 16)}</p>
-                    </>
+                  <>
+                    <p style={{ fontSize: `${event.fontSize * 0.5}px` }}>
+                      {event.startTime?.slice(0, 10)}{" "}
+                      {event.startTime?.slice(11, 16)}
+                    </p>
+                    <p style={{ fontSize: `${event.fontSize * 0.5}px` }}>
+                      {event.endTime?.slice(0, 10)}{" "}
+                      {event.endTime?.slice(11, 16)}
+                    </p>
+                  </>
                 )}
 
-                <p style={{ fontSize: `${event.fontSize * 0.6}px` }}>{event.location}</p>
-                <p style={{ fontSize: `${event.fontSize * 0.4}px` }}>{event.description}</p>
+                <p style={{ fontSize: `${event.fontSize * 0.6}px` }}>
+                  {event.location}
+                </p>
+                <p style={{ fontSize: `${event.fontSize * 0.4}px` }}>
+                  {event.description}
+                </p>
               </div>
             ))}
           </div>
@@ -323,18 +334,22 @@ const Community = () => {
 
       {/* Background div */}
       <div className="absolute bottom-0 left-0 w-full h-[1050px] bg-brown z-0"></div>
-      <AddEvent isOpen={isPopupOpen} onClose={handleClosePopup} 
-      onAddEvent={handleAddEvent}
-      editingEvent={editingEvent}
-      onDelete={handleDeleteEvent}
+      <AddEvent
+        isOpen={isPopupOpen}
+        onClose={handleClosePopup}
+        onAddEvent={handleAddEvent}
+        editingEvent={editingEvent}
+        onDelete={handleDeleteEvent}
       />
       {selectedEvent && (
-          <EventDetailsModal event={selectedEvent} onClose={() => setSelectedEvent(null)} 
-          onEdit={handleEditEvent} 
-          onDelete={handleDeleteEvent} 
+        <EventDetailsModal
+          event={selectedEvent}
+          onClose={() => setSelectedEvent(null)}
+          onEdit={handleEditEvent}
+          onDelete={handleDeleteEvent}
           editingEvent={editingEvent}
-          />
-        )}
+        />
+      )}
     </>
   );
 };
