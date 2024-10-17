@@ -6,15 +6,12 @@ import Snakes from "../Games/snakes.js";
 
 const EnlargedChessboard = ({ onClose }) => {
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50">
-      <div className="relative w-full h-full flex justify-center items-center">
-        <Chess className="max-w-full max-h-full" />
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 bg-brown text-white px-6 py-3 rounded-full text-3xl"
-        >
-          Close
-        </button>
+    <div
+      onClick={onClose}
+      className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50"
+    >
+      <div className="relative w-full h-full py-36 flex justify-center items-center">
+        <Chess />
       </div>
     </div>
   );
@@ -22,15 +19,12 @@ const EnlargedChessboard = ({ onClose }) => {
 
 const EnlargedSnakesAndLadders = ({ onClose }) => {
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50">
-      <div className="relative w-full h-full flex justify-center items-center">
-      <Snakes className="max-w-full max-h-full" />
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 bg-brown text-white px-6 py-3 rounded-full text-3xl"
-        >
-          Close
-        </button>
+    <div
+      onClick={onClose}
+      className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50"
+    >
+      <div className="relative w-full h-full py-36 flex justify-center items-center">
+        <Snakes className="max-w-full max-h-full" />
       </div>
     </div>
   );
@@ -65,9 +59,11 @@ const Games = () => {
             className="h-full bg-pink rounded-[30px] border-[3px] border-brown overflow-hidden"
             onClick={handleChessboardClick}
           >
-            <div className="h-[500px] cursor-pointer">
-              <Chess />
-            </div>
+            <img
+              src={chessboard}
+              alt="Snake and Ladder Board"
+              className="w-full h-[500px] object-cover cursor-pointer"
+            />
             <div className="p-4 text-center">
               <h2 className="text-9xl font-bold mb-2 text-darkbrown pt-20">
                 Chess
