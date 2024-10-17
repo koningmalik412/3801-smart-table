@@ -1,114 +1,211 @@
-import React, { useState} from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import AddEvent from "./addEvent.js";
+
+const calculateFontSize = (boxSize) => {
+  const baseFontSize = 40; // Base font size for smallest box
+  const maxFontSize = 80; // Maximum font size for largest box
+  const scale = boxSize / 300; // Scale factor for font size based on box size (adjust based on your needs)
+  const fontSize = Math.min(maxFontSize, baseFontSize * scale);
+  
+  return fontSize;
+};
+
+const EventDetailsModal = ({ event, onClose, onEdit, onDelete }) => {
+  return (
+    <div 
+      className="fixed inset-0 flex items-center justify-center z-20 bg-black bg-opacity-50"
+      onClick={onClose} 
+      style={{ zIndex: 40, position: 'fixed' }}
+    >
+      <div 
+        style={{ height: '1100px' }}
+        className="bg-base rounded-xl p-12 shadow-lg max-h-2xl max-w-6xl w-full flex flex-col justify-between" 
+        onClick={(e) => e.stopPropagation()} 
+      > 
+        <div className="text-brown">
+          <h2 className="mx-8 mt-8 text-9xl font-semibold"> 
+            {event.title}
+          </h2>
+          <p className="mx-8 mt-20 text-4xl ">
+            <strong>Location:</strong> {event.location}
+          </p>
+          <p className="mx-8 mt-8 text-4xl">
+            <strong>Start Time:</strong> {event.startTime?.slice(0, 10)} {event.startTime?.slice(11, 16)}
+          </p>
+          <p className="mx-8 mt-4 text-4xl">
+            <strong>End Time:</strong> {event.endTime?.slice(0, 10)} {event.endTime?.slice(11, 16)}
+          </p>
+
+          <p className="mx-8 mt-20 text-4xl">{event.description}</p>
+        </div>
+        <div className="flex justify-center space-x-4 mb-12"> {/* Increased margin here */}
+          <button 
+            onClick={() => onEdit(event)} 
+            className="px-48 py-4 text-5xl bg-blue text-white rounded-lg"
+          >
+            Edit
+          </button>
+          <button 
+            onClick={() => onDelete(event.id)} 
+            className="px-44 py-4 text-5xl bg-blue text-white rounded-lg"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+
+
+
 
 const Community = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [events, setEvents] = useState([]);
+  const [previousColor, setPreviousColor] = useState(null);
+  const [draggingIndex, setDraggingIndex] = useState(null);
+  const [offset, setOffset] = useState({ x: 0, y: 0 });
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [clickTimer, setClickTimer] = useState(null);
+  const clickThreshold = 200;
+  const [editingEvent, setEditingEvent] = useState(null);
+
+  const handleEditEvent = async (event) => {
+    setEditingEvent(event); // Set the current event for editing
+    setIsPopupOpen(true); // Open the modal
+  };
+
+  const handleDeleteEvent = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:3001/api/events/${id}`, {
+        method: "DELETE",
+      });
+  
+      if (response.ok) {
+        setEvents(events.filter((event) => event.id !== id));
+        setSelectedEvent(null); // Close the modal after deleting the event
+      } else {
+        console.error("Failed to delete event from database");
+      }
+    } catch (error) {
+      console.error("Failed to delete event:", error);
+    }
+  };
+  
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const response = await fetch("http://localhost:3001/api/events");
+        const data = await response.json();
+
+        const updatedEvents = data.map((event) => {
+          const boxSize = calculateBoxSize(); // Get the box size
+          const position = calculatePosition(boxSize);
+          const colors = ["bg-pink", "bg-blue", "bg-lightblue"];
+
+          const availableColors = colors.filter((color) => color !== previousColor);
+          const randomColor = availableColors[Math.floor(Math.random() * availableColors.length)];
+
+          return {
+            ...event,
+            position,
+            color: randomColor,
+            fontSize: calculateFontSize(boxSize), // Calculate font size for existing events
+          };
+        });
+
+        setEvents(updatedEvents);
+      } catch (error) {
+        console.error("Error fetching events:", error);
+      }
+    };
+
+    fetchEvents();
+  }, [previousColor]);
 
   const handleOpenPopup = () => setIsPopupOpen(true);
   const handleClosePopup = () => setIsPopupOpen(false);
 
   const calculateBoxSize = () => {
-    const minSize = 100; // Minimum size of the post-it box
-    const maxSize = 800; // Maximum size of the post-it box
+    const minSize = 100;
+    const maxSize = 800;
     const numEvents = events.length;
-    const maxEvents = 12; // Maximum number of events to fit nicely
-  
-    // Adjust the box size based on the number of events
-    const sizeFactor = Math.max(1, maxEvents - numEvents); 
+    const maxEvents = 16;
+
+    const sizeFactor = Math.max(1, maxEvents - numEvents);
     const size = Math.max(minSize, Math.min(maxSize, (maxSize / maxEvents) * sizeFactor));
-  
+
     return size;
   };
 
   const calculatePosition = (boxSize) => {
     const boardWidth = 3000; 
     const boardHeight = 1100; 
-    let position;
 
-    // Function to check if the new position overlaps with any existing events
     const isOverlapping = (pos) => {
-        return events.some((event) => {
-            const eventX = event.position?.x || 0;
-            const eventY = event.position?.y || 0;
-            return (
-                pos.x < eventX + boxSize &&
-                pos.x + boxSize > eventX &&
-                pos.y < eventY + boxSize &&
-                pos.y + boxSize > eventY
-            );
-        });
+      return events.some((event) => {
+        const eventX = event.position?.x || 0;
+        const eventY = event.position?.y || 0;
+        return (
+          pos.x < eventX + boxSize &&
+          pos.x + boxSize > eventX &&
+          pos.y < eventY + boxSize &&
+          pos.y + boxSize > eventY
+        );
+      });
     };
 
-    // Attempt to find a non-overlapping position for the new event
+    let position;
     for (let attempts = 0; attempts < 100; attempts++) {
-        position = {
-            x: Math.random() * (boardWidth - boxSize),
-            y: Math.random() * (boardHeight - boxSize),
-        };
+      position = {
+        x: Math.random() * (boardWidth - boxSize),
+        y: Math.random() * (boardHeight - boxSize),
+      };
 
-        if (!isOverlapping(position)) {
-            return position; // If no overlap, return the position
-        }
+      if (!isOverlapping(position)) {
+        return position; // If no overlap, return the position
+      }
     }
 
-    // If overlapping persists, resize existing events to create space
-    events.forEach((event) => {
-        const currentX = event.position?.x || 0;
-        const currentY = event.position?.y || 0;
+    return position; // Last resort
+  };
 
-        // Calculate distance from the new position to existing event
-        const distanceX = Math.abs(position.x - currentX);
-        const distanceY = Math.abs(position.y - currentY);
-        
-        // If within a certain threshold, adjust size
-        if (distanceX < boxSize && distanceY < boxSize) {
-            // Reduce the size of existing events
-            const newSize = Math.max(100, boxSize * 0.8); // Reduce size by 20% with a minimum of 100
-            event.position = {
-                ...event.position,
-                width: newSize,
-                height: newSize,
-            };
-        }
+  const handleAddEvent = async (event) => {
+  const boxSize = calculateBoxSize();
+  const position = calculatePosition(boxSize);
+  const colors = ["bg-pink", "bg-blue", "bg-lightblue"];
+  const availableColors = colors.filter((color) => color !== previousColor);
+  const randomColor = availableColors[Math.floor(Math.random() * availableColors.length)];
+
+  const newEvent = {
+    ...event,
+    position,
+    color: randomColor,
+    fontSize: calculateFontSize(boxSize), // Calculate font size for the new event only
+  };
+
+  // Send new event to the database
+  try {
+    const response = await fetch("http://localhost:3001/api/events", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newEvent),
     });
+    const createdEvent = await response.json();
+    setEvents((prevEvents) => [...prevEvents, createdEvent]);
+  } catch (error) {
+    console.error("Error adding event:", error);
+  }
 
-    // Re-attempt to find a non-overlapping position
-    for (let attempts = 0; attempts < 100; attempts++) {
-        position = {
-            x: Math.random() * (boardWidth - boxSize),
-            y: Math.random() * (boardHeight - boxSize),
-        };
+  setPreviousColor(randomColor);
+  handleClosePopup();
+};
 
-        if (!isOverlapping(position)) {
-            return position; // If no overlap, return the position
-        }
-    }
-
-    // As a last resort, return the last calculated position
-    return position;
-  };
-
-  const [previousColor, setPreviousColor] = useState(null); // Track the previous color
-
-  const handleAddEvent = (event) => {
-      const boxSize = calculateBoxSize();
-      const position = calculatePosition(boxSize);
-      const colors = ["bg-pink", "bg-blue", "bg-lightblue"];
-
-      // Filter out the previous color to avoid repeating
-      const availableColors = colors.filter(color => color !== previousColor);
-      const randomColor = availableColors[Math.floor(Math.random() * availableColors.length)];
-
-      setEvents([...events, { ...event, position, color: randomColor }]);
-      setPreviousColor(randomColor); // Update the previous color after assigning
-
-      handleClosePopup();
-  };
-
-  const [draggingIndex, setDraggingIndex] = useState(null);
-  const [offset, setOffset] = useState({ x: 0, y: 0 });
 
   const handleMouseDown = (e, index) => {
     setDraggingIndex(index);
@@ -116,25 +213,30 @@ const Community = () => {
       x: e.clientX - e.currentTarget.getBoundingClientRect().left,
       y: e.clientY - e.currentTarget.getBoundingClientRect().top,
     });
+  
+    // Start the click timer
+    const timer = setTimeout(() => {
+      setClickTimer(null); // Reset the timer
+    }, clickThreshold);
+    
+    setClickTimer(timer);
   };
 
   const handleMouseMove = (e) => {
     if (draggingIndex !== null) {
-      const boardWidth = 3000; // Width of the event board
-      const boardHeight = 1100; // Height of the event board
-      const boxSize = calculateBoxSize(); // Current size of the dragged box
-      
-      // Calculate new position with boundary checks
-      let newX = e.clientX - offset.x - 50; // Adjust the x position based on offset
-      let newY = e.clientY - offset.y - 187; // Adjust the y position based on offset
-      
-      // Add buffer to the boundaries (e.g., 100px)
-      const buffer = 100;
+      clearTimeout(clickTimer);
+      setClickTimer(null);
+      const boardWidth = 3000;
+      const boardHeight = 1100;
+      const boxSize = calculateBoxSize();
 
-      // Ensure the new X position is within the board boundaries
+      let newX = e.clientX - offset.x - 50;
+      let newY = e.clientY - offset.y - 187;
+
+      const buffer = 100;
       newX = Math.max(-buffer, Math.min(newX, boardWidth - boxSize + buffer));
       newY = Math.max(-buffer, Math.min(newY, boardHeight - boxSize + buffer));
-  
+
       const newEvents = [...events];
       newEvents[draggingIndex] = {
         ...newEvents[draggingIndex],
@@ -150,6 +252,13 @@ const Community = () => {
   const handleMouseUp = () => {
     setDraggingIndex(null);
   };
+
+  const handleClick = (event) => {
+    if (clickTimer) {
+      setSelectedEvent(event); // Only set the selected event if it was a quick click
+    }
+  };
+  
 
   const boxSize = calculateBoxSize();
 
@@ -187,27 +296,45 @@ const Community = () => {
                   top: event.position?.y || 0, 
                 }}
                 onMouseDown={(e) => handleMouseDown(e, index)}
+                onClick={() => handleClick(event)}
               >
-                <h3 className="text-6xl font-bold">{event.title}</h3>
-                <p className="text-4xl">{event.date}</p>
-                <p className="text-2xl">{event.time}</p>
-                <p className="text-4xl">{event.description}</p>
+                <h2 className="font-semibold mb-4" style={{ fontSize: `${event.fontSize}px` }}>
+                    {event.title}
+                </h2>
+
+                {event.isAllDay === 1 ? (
+                    <p style={{ fontSize: `${event.fontSize * 0.5}px` }}>
+                    {event.startTime?.slice(0, 10)} 
+                    </p>
+                ) : (
+                    <>
+                    <p style={{ fontSize: `${event.fontSize * 0.5}px` }}>{event.startTime?.slice(0, 10)} {event.startTime?.slice(11, 16)}</p>
+                    <p style={{ fontSize: `${event.fontSize * 0.5}px` }}>{event.endTime?.slice(0, 10)} {event.endTime?.slice(11, 16)}</p>
+                    </>
+                )}
+
+                <p style={{ fontSize: `${event.fontSize * 0.6}px` }}>{event.location}</p>
+                <p style={{ fontSize: `${event.fontSize * 0.4}px` }}>{event.description}</p>
               </div>
             ))}
           </div>
         </div>
-
-        {/* Back Button */}
-        {/* <div className="mt-12 ml-2">
-          <Link to="/" className="bg-pink text-5xl py-2 px-8 rounded-3xl">
-            BACK
-          </Link>
-        </div> */}
       </div>
 
       {/* Background div */}
       <div className="absolute bottom-0 left-0 w-full h-[1050px] bg-brown z-0"></div>
-      <AddEvent isOpen={isPopupOpen} onClose={handleClosePopup} onAddEvent={handleAddEvent} />
+      <AddEvent isOpen={isPopupOpen} onClose={handleClosePopup} 
+      onAddEvent={handleAddEvent}
+      editingEvent={editingEvent}
+      onDelete={handleDeleteEvent}
+      />
+      {selectedEvent && (
+          <EventDetailsModal event={selectedEvent} onClose={() => setSelectedEvent(null)} 
+          onEdit={handleEditEvent} 
+          onDelete={handleDeleteEvent} 
+          editingEvent={editingEvent}
+          />
+        )}
     </>
   );
 };
