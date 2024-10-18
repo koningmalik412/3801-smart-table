@@ -20,5 +20,5 @@ How to run
 
 3. To run on web: ```npm run start-web```
 
-If it fails to run, try ```npm run clean-install``` and try to run again.
+If it fails to run, try ```npm run clean-install``` and run again.
 Otherwise, enjoy the fantastic Smart Coffee Table!

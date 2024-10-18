@@ -277,7 +277,7 @@ const Community = () => {
 
         {/* Board */}
         <div
-          className="bg-base h-[1100px] w-full rounded-[30px] border-[3px] border-brown p-4 overflow-auto relative"
+          className="bg-base h-[1100px] w-full rounded-[30px] border-[3px] border-brown p-4 overflow-hidden relative"
           onMouseLeave={handleMouseUp}
         >
           <div className="grid grid-cols-3 gap-4">
